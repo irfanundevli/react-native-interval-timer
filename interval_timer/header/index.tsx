@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-export default function IntervalTimer() {
+export default function Header() {
   return (
     <View>
-      <Text>Interval Timer</Text>
+      <Text>Rounds</Text>
+      <Text>00:35</Text>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import IntervalTimer from "./IntervalTimer";
+import { IntervalTimer } from "./interval_timer";
 
 export default function App() {
   return (
