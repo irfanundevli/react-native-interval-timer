@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Header from "./header";
 import Footer from "./footer";
 import Step from "./step";
 
 export default function IntervalTimer() {
   return (
-    <View>
+    <View style={styles.container}>
       <Header />
 
       <Step name={"Prepare"} time={"00:05"} />
@@ -17,3 +17,10 @@ export default function IntervalTimer() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+});

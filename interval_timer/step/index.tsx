@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 interface Props {
   name: string;
@@ -8,9 +8,15 @@ interface Props {
 
 export default function Step({ name, time }: Props) {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>{name}</Text>
-      <Text>time</Text>
+      <Text>{time}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+  },
+});
