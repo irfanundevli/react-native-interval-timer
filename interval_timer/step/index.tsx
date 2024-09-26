@@ -9,8 +9,8 @@ interface Props {
 export default function Step({ name, time }: Props) {
   return (
     <View style={styles.container}>
-      <Text>{name}</Text>
-      <Text>{time}</Text>
+      <Text style={styles.text}>{name}</Text>
+      <Text style={styles.text}>{time}</Text>
     </View>
   );
 }
@@ -18,5 +18,8 @@ export default function Step({ name, time }: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+  },
+  text: {
+    color: "white",
   },
 });

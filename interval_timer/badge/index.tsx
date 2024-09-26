@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 interface Props {
   text: string;
@@ -8,7 +8,13 @@ interface Props {
 export default function Badge({ text }: Props) {
   return (
     <View>
-      <Text>{text}</Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  text: {
+    color: "white",
+  },
+});

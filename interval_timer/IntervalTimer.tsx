@@ -20,7 +20,9 @@ export default function IntervalTimer() {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "black",
     flex: 1,
     justifyContent: "space-between",
+    padding: 40,
   },
 });

@@ -4,8 +4,8 @@ import { View, Text, StyleSheet } from "react-native";
 export default function Header() {
   return (
     <View style={styles.container}>
-      <Text>Rounds</Text>
-      <Text>00:35</Text>
+      <Text style={styles.text}>Rounds</Text>
+      <Text style={styles.text}>00:35</Text>
     </View>
   );
 }
@@ -13,5 +13,8 @@ export default function Header() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+  },
+  text: {
+    color: "white",
   },
 });
