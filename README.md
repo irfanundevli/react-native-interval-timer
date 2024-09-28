@@ -1,6 +1,6 @@
 # Welcome to your Expo app 👋
 
-This is a interval timer app.
+This is an interval timer app.
 
 ## Get started
 
