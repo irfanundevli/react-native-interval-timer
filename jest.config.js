@@ -8,6 +8,9 @@ module.exports = {
     "!**/expo-env.d.ts",
     "!**/.expo/**",
   ],
+  moduleNameMapper: {
+    "@/hooks/(.*)": "<rootDir>/src/app/hooks/$1",
+  },
   preset: "jest-expo",
   setupFilesAfterEnv: ["<rootDir>/setup-jest.js"],
   transformIgnorePatterns: [
