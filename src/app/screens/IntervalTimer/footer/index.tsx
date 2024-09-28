@@ -1,13 +1,12 @@
 import React from "react";
-import { View, Button, StyleSheet } from "react-native";
-import Badge from "../badge";
+import { View, Button, StyleSheet, Text } from "react-native";
 
 export default function Footer() {
   return (
     <View style={styles.container}>
-      <Badge text="3 Rounds Left" />
+      <Text>{"3 Rounds Left"}</Text>
       <Button title="Start" />
-      <Badge text="3 Cycles Left" />
+      <Text>{"3 Cycles Left"}</Text>
     </View>
   );
 }

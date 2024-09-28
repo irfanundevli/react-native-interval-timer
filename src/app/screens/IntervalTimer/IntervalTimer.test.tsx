@@ -2,9 +2,9 @@ import { render, screen } from "@testing-library/react-native";
 import IntervalTimer from "./IntervalTimer";
 
 describe("Interval Timer Component", () => {
-  it("render correctly", () => {
+  it("displays total remaining time", () => {
     render(<IntervalTimer />);
 
-    expect(screen.getByText("Interval Timer")).toBeVisible();
+    expect(screen.getByText("Remaining")).toBeOnTheScreen();
   });
 });

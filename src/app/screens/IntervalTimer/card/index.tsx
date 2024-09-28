@@ -1,11 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Header() {
+interface Props {
+  name: string;
+  time: string;
+}
+
+export default function IntervalCard({ name, time }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Rounds</Text>
-      <Text style={styles.text}>00:35</Text>
+      <Text style={styles.text}>{name}</Text>
+      <Text style={styles.text}>{time}</Text>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { IntervalTimer } from "./interval_timer";
+import { IntervalTimer } from "@/screens/IntervalTimer";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
