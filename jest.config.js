@@ -10,6 +10,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     "@/hooks/(.*)": "<rootDir>/src/app/hooks/$1",
+    "@/store": "<rootDir>/src/app/store/",
+    "@/utils/(.*)": "<rootDir>/src/app/utils/$1",
   },
   preset: "jest-expo",
   setupFilesAfterEnv: ["<rootDir>/setup-jest.js"],

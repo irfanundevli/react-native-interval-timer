@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import { millisecondsToTime } from "./timeConverter";
-import type { CountDown, CountDownState as State } from "./types";
+import { millisecondsToTime } from "@/utils/time";
 
 type SIGNAL = "START" | "STOP" | "RESET" | "RESUME";
+type State = "RUNNING" | "STOPPED" | "NOT-STARTED";
+interface CountDown {
+  reset: () => void;
+  resume: () => void;
+  start: () => void;
+  state: State;
+  stop: () => void;
+  time: string;
+}
 
 export default function useCountdown(startTimeInMillis: number): CountDown {
   const [signal, setSignal] = useState<SIGNAL | undefined>();
