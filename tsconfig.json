@@ -5,8 +5,10 @@
       "@/*": [
         "./*",
       ],
+      "@/hooks/*": ["./src/app/hooks/*"],
       "@/screens/*": ["./src/app/screens/*"],
-      "@/hooks/*": ["./src/app/hooks/*"]
+      "@/store": ["./src/app/store"],
+      "@/utils/*": ["./src/app/utils/*"],
     },
     "strict": true,
   },
