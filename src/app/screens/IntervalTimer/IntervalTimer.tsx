@@ -8,14 +8,26 @@ import { getIntervals } from "@/store";
 import { millisecondsToTime } from "@/utils/time";
 
 export default function IntervalTimer() {
-  const [currIntervalIdx] = useState(0);
+  const [currIntervalIdx, setCurrIntervalIdx] = useState(0);
   const intervals = getIntervals();
   const currInterval = intervals[currIntervalIdx];
   const nextInterval = intervals[currIntervalIdx + 1];
 
-  const { start: startCountdown, time: currIntervalRemaining } = useCountdown(
-    currInterval.duration
-  );
+  const {
+    start: startCountdown,
+    time: currIntervalRemaining,
+    restart: restartCountdown,
+    isFinished: isCountdownFinished,
+  } = useCountdown(currInterval.duration);
+
+  if (isCountdownFinished) {
+    const nIdx = currIntervalIdx + 1;
+    const nInterval = intervals[nIdx];
+    if (nInterval) {
+      restartCountdown(nInterval.duration);
+      setCurrIntervalIdx(nIdx);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -23,6 +35,7 @@ export default function IntervalTimer() {
 
       <IntervalCard
         name={currInterval.name}
+        testID="current-interval"
         time={currIntervalRemaining}
         type={currInterval.type}
       />
@@ -30,6 +43,7 @@ export default function IntervalTimer() {
       {nextInterval && (
         <IntervalCard
           name={nextInterval.name}
+          testID="next-interval"
           time={millisecondsToTime(nextInterval.duration)}
           type={nextInterval.type}
         />
