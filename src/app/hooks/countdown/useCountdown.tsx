@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { millisecondsToTime } from "@/utils/time";
 
-type SIGNAL = "START" | "STOP" | "RESET" | "RESUME";
 type State = "RUNNING" | "STOPPED" | "NOT-STARTED";
 interface CountDown {
+  isFinished: boolean;
   reset: () => void;
+  restart: (time: number) => void;
   resume: () => void;
   start: () => void;
   state: State;
@@ -12,60 +13,58 @@ interface CountDown {
   time: string;
 }
 
+let intervalId: any;
+
 export default function useCountdown(startTimeInMillis: number): CountDown {
-  const [signal, setSignal] = useState<SIGNAL | undefined>();
   const [state, setState] = useState<State>("NOT-STARTED");
   const [timeMillis, setTimeMillis] = useState(startTimeInMillis);
 
   useEffect(() => {
-    let intervalId: any;
-
-    switch (signal) {
-      case "RESET": {
-        clearInterval(intervalId);
-        setTimeMillis(startTimeInMillis);
-        setState("NOT-STARTED");
-        break;
-      }
-      case "RESUME": {
-        intervalId = setInterval(() => {
-          setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
-        }, 10);
-        setState("RUNNING");
-        break;
-      }
-      case "START": {
-        intervalId = setInterval(() => {
-          setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
-        }, 10);
-        setState("RUNNING");
-        break;
-      }
-      case "STOP": {
-        clearInterval(intervalId);
-        setState("STOPPED");
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
     return () => clearInterval(intervalId);
-  }, [signal, startTimeInMillis, timeMillis]);
+  }, []);
 
-  useEffect(() => {
-    if (timeMillis <= 0) {
-      setSignal("RESET");
-    }
-  }, [timeMillis, setSignal]);
+  const reset = () => {
+    clearInterval(intervalId);
+    setTimeMillis(startTimeInMillis);
+    setState("NOT-STARTED");
+  };
+
+  const restart = (time: number) => {
+    setTimeMillis(time);
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
+    }, 10);
+    setState("RUNNING");
+  };
+
+  const resume = () => {
+    intervalId = setInterval(() => {
+      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
+    }, 10);
+    setState("RUNNING");
+  };
+
+  const start = () => {
+    intervalId = setInterval(() => {
+      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
+    }, 10);
+    setState("RUNNING");
+  };
+
+  const stop = () => {
+    clearInterval(intervalId);
+    setState("STOPPED");
+  };
 
   return {
-    reset: () => setSignal("RESET"),
-    resume: () => setSignal("RESUME"),
-    start: () => setSignal("START"),
+    isFinished: timeMillis === 0,
+    reset,
+    restart,
+    resume,
+    start,
     state,
-    stop: () => setSignal("STOP"),
+    stop,
     time: millisecondsToTime(timeMillis),
   };
 }

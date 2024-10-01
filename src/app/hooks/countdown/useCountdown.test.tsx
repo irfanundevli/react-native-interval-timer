@@ -7,6 +7,10 @@ const SECOND = 1000;
 const MINUTE = 60 * 1000;
 
 describe("useCountdown", () => {
+  afterEach(() => {
+    jest.clearAllTimers();
+  });
+
   const advanceTimersByTime = (timeInMillis: number) => {
     act(() => {
       jest.advanceTimersByTime(timeInMillis);
@@ -79,6 +83,22 @@ describe("useCountdown", () => {
     expect(result.current.time).toEqual("01:00");
   });
 
+  it("restarts the countdown with a new time", () => {
+    const { result } = renderHook(() => useCountdown(1 * MINUTE));
+    act(() => {
+      result.current.start();
+    });
+    advanceTimersByTime(1 * SECOND);
+    expect(result.current.time).toEqual("00:59");
+
+    act(() => {
+      result.current.restart(2 * MINUTE);
+    });
+    advanceTimersByTime(2 * SECOND);
+
+    expect(result.current.time).toEqual("01:58");
+  });
+
   it("sets state as NOT-STARTED initially", () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
 
@@ -123,5 +143,17 @@ describe("useCountdown", () => {
     });
 
     expect(result.current.state).toEqual("STOPPED");
+  });
+
+  it("returns isFinished as true when the countdown reaches zero", () => {
+    const { result } = renderHook(() => useCountdown(1 * MINUTE));
+    act(() => {
+      result.current.start();
+    });
+
+    expect(result.current.isFinished).toBeFalsy();
+    advanceTimersByTime(1 * MINUTE);
+
+    expect(result.current.isFinished).toBeTruthy();
   });
 });

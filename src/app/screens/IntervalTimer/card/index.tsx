@@ -4,16 +4,17 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 interface Props {
-  type: IntervalType;
   name: string;
+  testID?: string;
   time: string;
+  type: IntervalType;
 }
 
-export default function IntervalCard({ name, time, type }: Props) {
+export default function IntervalCard({ name, testID, time, type }: Props) {
   const textColor = getTextColor(type);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testID}>
       <Text style={{ color: textColor }}>{name}</Text>
       <Text style={{ color: textColor }}>{time}</Text>
     </View>
