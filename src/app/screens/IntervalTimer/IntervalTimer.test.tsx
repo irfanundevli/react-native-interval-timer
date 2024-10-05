@@ -59,4 +59,21 @@ describe('Interval Timer Component', () => {
         expect(within(currInterval).getByText('Rest')).toBeOnTheScreen();
         expect(within(currInterval).getByText('00:02')).toBeOnTheScreen();
     });
+
+    it('displays total remaining time', () => {
+        (getIntervals as jest.Mock).mockReturnValue([
+            { type: 'exercise', name: 'Exercise', duration: 60 * SECOND },
+            { type: 'rest', name: 'Rest', duration: 10 * SECOND },
+        ]);
+        render(<IntervalTimer />);
+        act(() => {
+            fireEvent.press(screen.getByTestId('play'));
+        });
+
+        advanceTimersByTime(5 * SECOND);
+
+        const totalRemainingTimeFragment = screen.getByTestId('total-remaining-time');
+        expect(within(totalRemainingTimeFragment).getByText('Remaining')).toBeOnTheScreen();
+        expect(within(totalRemainingTimeFragment).getByText('01:05')).toBeOnTheScreen();
+    });
 });

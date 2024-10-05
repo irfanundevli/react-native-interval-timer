@@ -25,10 +25,10 @@ describe('useCountdown', () => {
         });
 
         advanceTimersByTime(1 * SECOND);
-        expect(result.current.time).toEqual('00:59');
+        expect(result.current.formattedTime).toEqual('00:59');
 
         advanceTimersByTime(1 * SECOND);
-        expect(result.current.time).toEqual('00:58');
+        expect(result.current.formattedTime).toEqual('00:58');
     });
 
     it('stops the countdown', () => {
@@ -44,7 +44,7 @@ describe('useCountdown', () => {
         });
 
         advanceTimersByTime(2 * SECOND);
-        expect(result.current.time).toEqual('00:59');
+        expect(result.current.formattedTime).toEqual('00:59');
     });
 
     it('resumes the countdown', () => {
@@ -62,7 +62,7 @@ describe('useCountdown', () => {
         });
         advanceTimersByTime(2 * SECOND);
 
-        expect(result.current.time).toEqual('00:57');
+        expect(result.current.formattedTime).toEqual('00:57');
     });
 
     it('resets the countdown', () => {
@@ -80,7 +80,7 @@ describe('useCountdown', () => {
         });
         advanceTimersByTime(2 * SECOND);
 
-        expect(result.current.time).toEqual('01:00');
+        expect(result.current.formattedTime).toEqual('01:00');
     });
 
     it('restarts the countdown with a new time', () => {
@@ -89,14 +89,14 @@ describe('useCountdown', () => {
             result.current.start();
         });
         advanceTimersByTime(1 * SECOND);
-        expect(result.current.time).toEqual('00:59');
+        expect(result.current.formattedTime).toEqual('00:59');
 
         act(() => {
             result.current.restart(2 * MINUTE);
         });
         advanceTimersByTime(2 * SECOND);
 
-        expect(result.current.time).toEqual('01:58');
+        expect(result.current.formattedTime).toEqual('01:58');
     });
 
     it('sets state as NOT-STARTED initially', () => {
