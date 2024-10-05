@@ -7,9 +7,10 @@ jest.useFakeTimers();
 
 const SECOND = 1000;
 
-describe('Interval Timer Component', () => {
+describe('Interval Timer', () => {
     afterEach(() => {
         jest.clearAllTimers();
+        jest.clearAllMocks();
     });
 
     const advanceTimersByTime = (timeInMillis: number) => {
@@ -49,7 +50,7 @@ describe('Interval Timer Component', () => {
         expect(within(nextInterval).getByText('00:10')).toBeOnTheScreen();
     });
 
-    it('displays next interval within current interval section when the current interval is finished', () => {
+    it('displays next interval as current interval when the current interval is finished', () => {
         (getIntervals as jest.Mock).mockReturnValue([
             { type: 'exercise', name: 'Exercise', duration: 5 * SECOND },
             { type: 'rest', name: 'Rest', duration: 2 * SECOND },
@@ -95,7 +96,7 @@ describe('Interval Timer Component', () => {
         expect(within(currInterval).getByText('00:53')).toBeOnTheScreen();
     });
 
-    it('resumes when the start button is presses after stopping it first', () => {
+    it('resumes when the start button is pressed after stopping the countdown first', () => {
         (getIntervals as jest.Mock).mockReturnValue([
             { type: 'exercise', name: 'Exercise', duration: 60 * SECOND },
             { type: 'rest', name: 'Rest', duration: 5 * SECOND },
@@ -111,5 +112,26 @@ describe('Interval Timer Component', () => {
 
         const currInterval = screen.getByTestId('current-interval');
         expect(within(currInterval).getByText('00:51')).toBeOnTheScreen();
+    });
+
+    it('displays remaining rounds count', () => {
+        (getIntervals as jest.Mock).mockReturnValue([
+            { type: 'exercise', name: 'Exercise', duration: 60 * SECOND },
+            { type: 'rest', name: 'Rest', duration: 5 * SECOND },
+            { type: 'exercise', name: 'Exercise', duration: 60 * SECOND },
+            { type: 'rest', name: 'Rest', duration: 5 * SECOND },
+            { type: 'exercise', name: 'Exercise', duration: 60 * SECOND },
+            { type: 'rest', name: 'Rest', duration: 5 * SECOND },
+        ]);
+        render(<IntervalTimer />);
+
+        pressButton('play');
+        expect(screen.getByText('3 Rounds Left')).toBeOnTheScreen();
+
+        advanceTimersByTime(64 * SECOND);
+        expect(screen.getByText('3 Rounds Left')).toBeOnTheScreen();
+
+        advanceTimersByTime(65 * SECOND);
+        expect(screen.getByText('2 Rounds Left')).toBeOnTheScreen();
     });
 });
