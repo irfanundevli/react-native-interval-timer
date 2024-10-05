@@ -33,6 +33,9 @@ export default function IntervalTimer() {
     const totalRemainingTime =
         currIntervalRemainingTime + intervals.slice(currIntervalIdx + 1).reduce((acc, i) => acc + i.duration, 0);
 
+    const currentRound = currIntervalIdx > 0 ? currIntervalIdx - 1 : currIntervalIdx;
+    const remainingRounds = intervals.slice(currentRound).filter((i) => i.type === 'exercise').length || 0;
+
     return (
         <View style={styles.container}>
             <View style={styles.center} testID="total-remaining-time">
@@ -57,13 +60,13 @@ export default function IntervalTimer() {
             )}
 
             <View style={styles.footer}>
-                <Text>{'3 Rounds Left'}</Text>
+                <Text style={styles.whiteText}>{`${remainingRounds} Rounds Left`}</Text>
                 {countdownState === 'RUNNING' ? (
                     <Button title="Stop" testID="stop" onPress={stopCountdown} />
                 ) : (
                     <Button title="Start" testID="play" onPress={startCountdown} />
                 )}
-                <Text>{'3 Cycles Left'}</Text>
+                <Text style={styles.whiteText}>{'3 Cycles Left'}</Text>
             </View>
         </View>
     );
@@ -81,8 +84,9 @@ const styles = StyleSheet.create({
         padding: 40,
     },
     footer: {
-        flexDirection: 'row',
+        width: '100%',
         alignItems: 'center',
+        flexDirection: 'row',
         justifyContent: 'space-between',
     },
     whiteText: {
