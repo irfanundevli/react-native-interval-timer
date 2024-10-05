@@ -3,6 +3,7 @@ import { millisecondsToTime } from '@/utils/time';
 
 type State = 'RUNNING' | 'STOPPED' | 'NOT-STARTED';
 interface CountDown {
+    formattedTime: string;
     isFinished: boolean;
     reset: () => void;
     restart: (time: number) => void;
@@ -10,7 +11,7 @@ interface CountDown {
     start: () => void;
     state: State;
     stop: () => void;
-    time: string;
+    time: number;
 }
 
 let intervalId: any;
@@ -65,6 +66,7 @@ export default function useCountdown(startTimeInMillis: number): CountDown {
         start,
         state,
         stop,
-        time: millisecondsToTime(timeMillis),
+        time: timeMillis,
+        formattedTime: millisecondsToTime(timeMillis),
     };
 }
