@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import Footer from './footer';
+import { View, StyleSheet, Text, Button } from 'react-native';
 import IntervalCard from './card';
 import { useCountdown } from '@/hooks/countdown';
 import { getIntervals } from '@/store';
@@ -17,6 +16,8 @@ export default function IntervalTimer() {
         isFinished: isCountdownFinished,
         restart: restartCountdown,
         start: startCountdown,
+        state: countdownState,
+        stop: stopCountdown,
         time: currIntervalRemainingTime,
     } = useCountdown(currInterval.duration);
 
@@ -55,12 +56,23 @@ export default function IntervalTimer() {
                 />
             )}
 
-            <Footer onStart={startCountdown} />
+            <View style={styles.footer}>
+                <Text>{'3 Rounds Left'}</Text>
+                {countdownState === 'RUNNING' ? (
+                    <Button title="Stop" testID="stop" onPress={stopCountdown} />
+                ) : (
+                    <Button title="Start" testID="play" onPress={startCountdown} />
+                )}
+                <Text>{'3 Cycles Left'}</Text>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    center: {
+        alignItems: 'center',
+    },
     container: {
         alignItems: 'center',
         backgroundColor: 'black',
@@ -68,8 +80,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 40,
     },
-    center: {
+    footer: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
     whiteText: {
         color: 'white',
