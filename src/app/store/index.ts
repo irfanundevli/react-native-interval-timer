@@ -1,2 +1,3 @@
-export { getIntervals } from "./fakeStore";
-export type { IntervalType } from "./fakeStore";
+export { getWorkout } from './fakeStore';
+export type { IntervalType } from './types';
+export { Workout } from './Workout';
