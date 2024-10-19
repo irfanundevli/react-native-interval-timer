@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { millisecondsToTime } from '@/utils/time';
 
 type State = 'RUNNING' | 'STOPPED' | 'NOT-STARTED';
@@ -7,7 +7,6 @@ interface CountDown {
   isFinished: boolean;
   reset: () => void;
   restart: (time: number) => void;
-  resume: () => void;
   start: () => void;
   state: State;
   stop: () => void;
@@ -24,45 +23,37 @@ export default function useCountdown(startTimeInMillis: number): CountDown {
     return () => clearInterval(intervalId);
   }, []);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     clearInterval(intervalId);
-    setTimeMillis(startTimeInMillis);
     setState('NOT-STARTED');
-  };
+    setTimeMillis(startTimeInMillis);
+  }, [startTimeInMillis]);
 
-  const restart = (time: number) => {
-    setTimeMillis(time);
+  const restart = useCallback((time: number) => {
     clearInterval(intervalId);
     intervalId = setInterval(() => {
       setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
     }, 10);
     setState('RUNNING');
-  };
+    setTimeMillis(time);
+  }, []);
 
-  const resume = () => {
+  const start = useCallback(() => {
     intervalId = setInterval(() => {
       setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
     }, 10);
     setState('RUNNING');
-  };
+  }, []);
 
-  const start = () => {
-    intervalId = setInterval(() => {
-      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
-    }, 10);
-    setState('RUNNING');
-  };
-
-  const stop = () => {
+  const stop = useCallback(() => {
     clearInterval(intervalId);
     setState('STOPPED');
-  };
+  }, []);
 
   return {
     isFinished: timeMillis === 0,
     reset,
     restart,
-    resume,
     start,
     state,
     stop,

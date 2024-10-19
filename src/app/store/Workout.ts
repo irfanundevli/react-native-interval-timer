@@ -1,6 +1,7 @@
 import { Interval } from './types';
 
 export class Workout {
+  private completedIntervals: Interval[] = [];
   private currIntervalIdx: number = 0;
   private currRound: number = 0;
   private currCycle: number = 0;
@@ -8,7 +9,6 @@ export class Workout {
   private readonly cycles!: number;
   private readonly rounds!: number;
   private readonly intervals: Interval[] = [];
-  private readonly completedIntervals: Interval[] = [];
   private readonly totalDuration: number = 0;
   private readonly intervalCountPerRound: number = 0;
   private readonly intervalCountPerCycle: number = 0;
@@ -43,7 +43,7 @@ export class Workout {
     return this.totalDuration - completedIntervalsDuration - this.currentInterval.duration + offset;
   }
 
-  get totalIntervalCount(): number {
+  private get totalIntervalCount(): number {
     return this.intervals.length;
   }
 
@@ -69,5 +69,13 @@ export class Workout {
 
   get nextInterval(): Interval | undefined {
     return this.intervals[this.currIntervalIdx + 1];
+  }
+
+  /** Reset the workout state to its initial configuration */
+  reset() {
+    this.completedIntervals = [];
+    this.currIntervalIdx = 0;
+    this.currRound = 0;
+    this.currCycle = 0;
   }
 }

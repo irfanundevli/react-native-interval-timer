@@ -27,9 +27,22 @@ export default function IntervalTimer({ workout }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.center} testID="total-remaining-time">
-        <Text style={styles.whiteText}>Remaining</Text>
-        <Text style={styles.whiteText}>{millisecondsToTime(totalRemainingTime)}</Text>
+      <View>
+        <View style={styles.center} testID="total-remaining-time">
+          <Text style={styles.whiteText}>Remaining</Text>
+          <Text style={styles.whiteText}>{millisecondsToTime(totalRemainingTime)}</Text>
+        </View>
+
+        <View style={styles.reset}>
+          <Button
+            onPress={() => {
+              workout.reset();
+              countdown.reset();
+            }}
+            testID="reset"
+            title="Reset"
+          />
+        </View>
       </View>
 
       <IntervalCard
@@ -77,6 +90,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  reset: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   whiteText: {
     color: 'white',

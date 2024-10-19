@@ -47,24 +47,6 @@ describe('useCountdown', () => {
     expect(result.current.formattedTime).toEqual('00:59');
   });
 
-  it('resumes the countdown', () => {
-    const { result } = renderHook(() => useCountdown(1 * MINUTE));
-    act(() => {
-      result.current.start();
-    });
-    advanceTimersByTime(1 * SECOND);
-    act(() => {
-      result.current.stop();
-    });
-
-    act(() => {
-      result.current.resume();
-    });
-    advanceTimersByTime(2 * SECOND);
-
-    expect(result.current.formattedTime).toEqual('00:57');
-  });
-
   it('resets the countdown', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
     act(() => {
@@ -120,16 +102,6 @@ describe('useCountdown', () => {
 
     act(() => {
       result.current.start();
-    });
-
-    expect(result.current.state).toEqual('RUNNING');
-  });
-
-  it('sets state as RUNNING when resume function is called', () => {
-    const { result } = renderHook(() => useCountdown(1 * MINUTE));
-
-    act(() => {
-      result.current.resume();
     });
 
     expect(result.current.state).toEqual('RUNNING');
