@@ -71,4 +71,28 @@ describe('Workout', () => {
     workout.next();
     expect(workout.calculateTotalRemainingTime(30 * SECOND)).toEqual(425000);
   });
+
+  it('resets the workout state', () => {
+    const workout = new Workout({
+      cycles: 2,
+      exercise: { name: 'Exercise', type: 'exercise', duration: 1 * MINUTE },
+      rest: { name: 'Rest', type: 'rest', duration: 5 * SECOND },
+      roundsPerCycle: 2,
+    });
+
+    // first round
+    workout.next();
+    workout.next();
+    // second round
+    workout.next();
+    workout.next();
+
+    expect(workout.remainingRounds).toBe(2);
+    expect(workout.remainingCycles).toBe(1);
+
+    workout.reset();
+
+    expect(workout.remainingRounds).toBe(2);
+    expect(workout.remainingCycles).toBe(2);
+  });
 });

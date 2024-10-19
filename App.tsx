@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { IntervalTimer } from '@/screens/IntervalTimer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getWorkout } from './src/app/store';
+import { getWorkout } from '@/store';
 
 export default function App() {
   const workout = getWorkout();

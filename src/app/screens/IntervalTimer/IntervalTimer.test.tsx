@@ -2,16 +2,10 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react-n
 import IntervalTimer from './IntervalTimer';
 import { Workout } from '@/store';
 
-jest.useFakeTimers();
-
 const SECOND = 1000;
+const MINUTE = 60 * SECOND;
 
 describe('Interval Timer', () => {
-  afterEach(() => {
-    jest.clearAllTimers();
-    jest.clearAllMocks();
-  });
-
   const advanceTimersByTime = (timeInMillis: number) => {
     act(() => {
       jest.advanceTimersByTime(timeInMillis);
@@ -23,6 +17,19 @@ describe('Interval Timer', () => {
       fireEvent.press(screen.getByTestId(testID));
     });
   };
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.clearAllMocks();
+  });
 
   it('displays current interval countdown', () => {
     const workout = new Workout({
@@ -162,5 +169,28 @@ describe('Interval Timer', () => {
 
     advanceTimersByTime(65 * SECOND);
     expect(screen.getByText('2 Rounds Left')).toBeOnTheScreen();
+  });
+
+  it('resets the timer', () => {
+    const workout = new Workout({
+      cycles: 2,
+      exercise: { type: 'exercise', name: 'Exercise', duration: 1 * MINUTE },
+      rest: { type: 'rest', name: 'Rest', duration: 5 * SECOND },
+      roundsPerCycle: 3,
+    });
+    render(<IntervalTimer workout={workout} />);
+    pressButton('play');
+    advanceTimersByTime(30 * SECOND);
+
+    pressButton('reset');
+
+    const currInterval = screen.getByTestId('current-interval');
+    expect(within(currInterval).getByText('Exercise')).toBeOnTheScreen();
+    expect(within(currInterval).getByText('01:00')).toBeOnTheScreen();
+    const nextInterval = screen.getByTestId('next-interval');
+    expect(within(nextInterval).getByText('Rest')).toBeOnTheScreen();
+    expect(within(nextInterval).getByText('00:05')).toBeOnTheScreen();
+    expect(screen.getByText('3 Rounds Left')).toBeOnTheScreen();
+    expect(screen.getByText('2 Cycles Left')).toBeOnTheScreen();
   });
 });
