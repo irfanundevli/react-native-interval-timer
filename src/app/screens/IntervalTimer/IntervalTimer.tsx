@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     flex: 1,
     justifyContent: 'space-between',
-    padding: 40,
   },
   footer: {
     width: '100%',
