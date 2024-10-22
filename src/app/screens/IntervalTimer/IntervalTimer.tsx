@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
-import IntervalCard from './card';
+import IntervalCard from './card/IntervalCard';
 import { useCountdown } from '@/hooks/countdown';
 import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
@@ -44,22 +44,24 @@ export default function IntervalTimer({ workout }: Props) {
           />
         </View>
       </View>
-
-      <IntervalCard
-        name={currentInterval.name}
-        testID="current-interval"
-        time={millisecondsToTime(countdown.time)}
-        type={currentInterval.type}
-      />
-
-      {nextInterval && (
+      <View style={styles.intervals}>
         <IntervalCard
-          name={nextInterval.name}
-          testID="next-interval"
-          time={millisecondsToTime(nextInterval.duration)}
-          type={nextInterval.type}
+          name={currentInterval.name}
+          size="2xl"
+          testID="current-interval"
+          time={millisecondsToTime(countdown.time)}
+          type={currentInterval.type}
         />
-      )}
+        {nextInterval && (
+          <IntervalCard
+            name={nextInterval.name}
+            size="md"
+            testID="next-interval"
+            time={millisecondsToTime(nextInterval.duration)}
+            type={nextInterval.type}
+          />
+        )}
+      </View>
 
       <View style={styles.footer}>
         <Text style={styles.whiteText}>{`${workout.remainingRounds} Rounds Left`}</Text>
@@ -83,12 +85,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     flex: 1,
     justifyContent: 'space-between',
+    width: '100%',
+  },
+  intervals: {
+    width: '100%',
   },
   footer: {
-    width: '100%',
+    alignSelf: 'flex-end',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   reset: {
     alignItems: 'center',
