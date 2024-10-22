@@ -1,81 +1,77 @@
 import { Interval } from './types';
 
 export class Workout {
-  private completedIntervals: Interval[] = [];
-  private currIntervalIdx: number = 0;
-  private currRound: number = 0;
-  private currCycle: number = 0;
+  private _completedIntervals: Interval[] = [];
+  private _currIntervalIdx: number = 0;
+  private _currRound: number = 0;
+  private _currCycle: number = 0;
 
-  private readonly cycles!: number;
-  private readonly rounds!: number;
-  private readonly intervals: Interval[] = [];
-  private readonly totalDuration: number = 0;
-  private readonly intervalCountPerRound: number = 0;
-  private readonly intervalCountPerCycle: number = 0;
+  private readonly _cycles!: number;
+  private readonly _rounds!: number;
+  private readonly _intervals: Interval[] = [];
+  private readonly _totalDuration: number = 0;
+  private readonly _intervalCountPerRound: number = 0;
+  private readonly _intervalCountPerCycle: number = 0;
 
   constructor(w: { cycles: number; exercise: Interval; rest?: Interval; roundsPerCycle: number }) {
-    this.cycles = w.cycles;
-    this.rounds = w.roundsPerCycle;
+    this._cycles = w.cycles;
+    this._rounds = w.roundsPerCycle;
 
-    for (let i = 0; i < this.cycles * this.rounds; i++) {
-      this.intervals.push(w.exercise);
+    for (let i = 0; i < this._cycles * this._rounds; i++) {
+      this._intervals.push(w.exercise);
       if (w.rest) {
-        this.intervals.push(w.rest);
+        this._intervals.push(w.rest);
       }
     }
 
-    this.totalDuration = this.intervals.reduce((acc, interval) => acc + interval.duration, 0);
-    this.intervalCountPerRound = 1 + (w.rest ? 1 : 0);
-    this.intervalCountPerCycle = this.intervalCountPerRound * this.rounds;
+    this._totalDuration = this._intervals.reduce((acc, interval) => acc + interval.duration, 0);
+    this._intervalCountPerRound = 1 + (w.rest ? 1 : 0);
+    this._intervalCountPerCycle = this._intervalCountPerRound * this._rounds;
   }
 
   get remainingCycles(): number {
-    return this.cycles - this.currCycle;
+    return this._cycles - this._currCycle;
   }
 
   get remainingRounds(): number {
-    return this.rounds - this.currRound;
+    return this._rounds - this._currRound;
   }
 
   calculateTotalRemainingTime(offset: number): number {
-    const completedIntervalsDuration = this.completedIntervals.reduce((acc, interval) => acc + interval.duration, 0);
+    const completedIntervalsDuration = this._completedIntervals.reduce((acc, interval) => acc + interval.duration, 0);
 
-    return this.totalDuration - completedIntervalsDuration - this.currentInterval.duration + offset;
-  }
-
-  private get totalIntervalCount(): number {
-    return this.intervals.length;
+    return this._totalDuration - completedIntervalsDuration - this.currentInterval.duration + offset;
   }
 
   next(): void {
-    this.completedIntervals.push(this.currentInterval);
-    if (this.completedIntervals.length === this.intervals.length) return;
+    this._completedIntervals.push(this.currentInterval);
+    if (this._completedIntervals.length === this._intervals.length) return;
 
-    this.currIntervalIdx++;
+    this._currIntervalIdx++;
 
-    if (this.completedIntervals.length % this.intervalCountPerRound === 0) {
-      this.currRound++;
+    if (this._completedIntervals.length % this._intervalCountPerRound === 0) {
+      this._currRound++;
     }
 
-    if (this.completedIntervals.length % this.intervalCountPerCycle === 0) {
-      this.currCycle++;
-      this.currRound = 0;
+    if (this._completedIntervals.length % this._intervalCountPerCycle === 0) {
+      this._currCycle++;
+      this._currRound = 0;
     }
   }
 
   get currentInterval(): Interval {
-    return this.intervals[this.currIntervalIdx];
+    return this._intervals[this._currIntervalIdx];
   }
 
   get nextInterval(): Interval | undefined {
-    return this.intervals[this.currIntervalIdx + 1];
+    return this._intervals[this._currIntervalIdx + 1];
   }
 
   /** Reset the workout state to its initial configuration */
   reset() {
-    this.completedIntervals = [];
-    this.currIntervalIdx = 0;
-    this.currRound = 0;
-    this.currCycle = 0;
+    this._completedIntervals = [];
+    this._currIntervalIdx = 0;
+    this._currRound = 0;
+    this._currCycle = 0;
   }
 }

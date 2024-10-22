@@ -8,6 +8,7 @@
       "@/hooks/*": ["./src/app/hooks/*"],
       "@/screens/*": ["./src/app/screens/*"],
       "@/store": ["./src/app/store"],
+      "@/ui/*": ["./src/app/ui-library/*"],
       "@/utils/*": ["./src/app/utils/*"],
     },
     "strict": true,
