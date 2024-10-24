@@ -21,40 +21,40 @@ describe('Workout', () => {
     expect(workout.nextInterval).toBe(rest);
   });
 
-  it('returns remaining cycle counts', () => {
+  it('returns cycle status', () => {
     const exercise: Interval = { name: 'Exercise', type: 'exercise', duration: 66 * SECOND };
     const rest: Interval = { name: 'Rest', type: 'rest', duration: 60 * SECOND };
 
     const workout = new Workout({ cycles: 2, exercise, rest, roundsPerCycle: 1 });
 
-    expect(workout.remainingCycles).toBe(2);
+    expect(workout.cycleStatus).toBe('1/2');
 
     workout.next();
-    expect(workout.remainingCycles).toBe(2);
+    expect(workout.cycleStatus).toBe('1/2');
 
     workout.next();
-    expect(workout.remainingCycles).toBe(1);
+    expect(workout.cycleStatus).toBe('2/2');
 
     workout.next();
-    expect(workout.remainingCycles).toBe(1);
+    expect(workout.cycleStatus).toBe('2/2');
   });
 
-  it('returns remaining round counts', () => {
+  it('returns round status', () => {
     const exercise: Interval = { name: 'Exercise', type: 'exercise', duration: 66 * SECOND };
     const rest: Interval = { name: 'Rest', type: 'rest', duration: 60 * SECOND };
 
     const workout = new Workout({ cycles: 1, exercise, rest, roundsPerCycle: 2 });
 
-    expect(workout.remainingRounds).toBe(2);
+    expect(workout.roundStatus).toBe('1/2');
 
     workout.next();
-    expect(workout.remainingRounds).toBe(2);
+    expect(workout.roundStatus).toBe('1/2');
 
     workout.next();
-    expect(workout.remainingRounds).toBe(1);
+    expect(workout.roundStatus).toBe('2/2');
 
     workout.next();
-    expect(workout.remainingRounds).toBe(1);
+    expect(workout.roundStatus).toBe('2/2');
   });
 
   it('calculates total remaining time', () => {
@@ -87,12 +87,12 @@ describe('Workout', () => {
     workout.next();
     workout.next();
 
-    expect(workout.remainingRounds).toBe(2);
-    expect(workout.remainingCycles).toBe(1);
+    expect(workout.roundStatus).toBe('1/2');
+    expect(workout.cycleStatus).toBe('2/2');
 
     workout.reset();
 
-    expect(workout.remainingRounds).toBe(2);
-    expect(workout.remainingCycles).toBe(2);
+    expect(workout.roundStatus).toBe('1/2');
+    expect(workout.cycleStatus).toBe('1/2');
   });
 });
