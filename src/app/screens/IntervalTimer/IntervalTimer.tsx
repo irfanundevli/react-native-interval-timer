@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
-import IntervalCard from './card/IntervalCard';
+import { View, StyleSheet, Button } from 'react-native';
+import IntervalCard from './card';
 import { useCountdown } from '@/hooks/countdown';
 import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
+import Status from './status';
 
 interface Props {
   workout: Workout;
@@ -27,23 +28,17 @@ export default function IntervalTimer({ workout }: Props) {
 
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.center} testID="total-remaining-time">
-          <Text style={styles.whiteText}>Remaining</Text>
-          <Text style={styles.whiteText}>{millisecondsToTime(totalRemainingTime)}</Text>
-        </View>
-
-        <View style={styles.reset}>
-          <Button
-            onPress={() => {
-              workout.reset();
-              countdown.reset();
-            }}
-            testID="reset"
-            title="Reset"
-          />
-        </View>
+      <View style={styles.reset}>
+        <Button
+          onPress={() => {
+            workout.reset();
+            countdown.reset();
+          }}
+          testID="reset"
+          title="Reset"
+        />
       </View>
+
       <View style={styles.intervals}>
         <IntervalCard
           name={currentInterval.name}
@@ -63,14 +58,18 @@ export default function IntervalTimer({ workout }: Props) {
         )}
       </View>
 
+      <View style={styles.status}>
+        <Status name="ROUNDS" testID="rounds" value={workout.roundStatus} />
+        <Status name="REMAINING" testID="remaining" value={millisecondsToTime(totalRemainingTime)} />
+        <Status name="CYCLES" testID="cycles" value={workout.cycleStatus} />
+      </View>
+
       <View style={styles.footer}>
-        <Text style={styles.whiteText}>{`${workout.remainingRounds} Rounds Left`}</Text>
         {countdown.state === 'RUNNING' ? (
           <Button title="Stop" testID="stop" onPress={() => countdown.stop()} />
         ) : (
           <Button title="Start" testID="play" onPress={() => countdown.start()} />
         )}
-        <Text style={styles.whiteText}>{`${workout.remainingCycles} Cycles Left`}</Text>
       </View>
     </View>
   );
@@ -91,18 +90,21 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   footer: {
-    alignSelf: 'flex-end',
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
   },
   reset: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  whiteText: {
+  status: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 40,
+    width: '100%',
+  },
+  white: {
     color: 'white',
   },
 });

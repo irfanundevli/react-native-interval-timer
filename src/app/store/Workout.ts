@@ -7,11 +7,11 @@ export class Workout {
   private _currCycle: number = 0;
 
   private readonly _cycles!: number;
-  private readonly _rounds!: number;
   private readonly _intervals: Interval[] = [];
-  private readonly _totalDuration: number = 0;
-  private readonly _intervalCountPerRound: number = 0;
   private readonly _intervalCountPerCycle: number = 0;
+  private readonly _intervalCountPerRound: number = 0;
+  private readonly _rounds!: number;
+  private readonly _totalDuration: number = 0;
 
   constructor(w: { cycles: number; exercise: Interval; rest?: Interval; roundsPerCycle: number }) {
     this._cycles = w.cycles;
@@ -29,12 +29,12 @@ export class Workout {
     this._intervalCountPerCycle = this._intervalCountPerRound * this._rounds;
   }
 
-  get remainingCycles(): number {
-    return this._cycles - this._currCycle;
+  get cycleStatus(): string {
+    return `${this._currCycle + 1}/${this._cycles}`;
   }
 
-  get remainingRounds(): number {
-    return this._rounds - this._currRound;
+  get roundStatus(): string {
+    return `${this._currRound + 1}/${this._rounds}`;
   }
 
   calculateTotalRemainingTime(offset: number): number {
