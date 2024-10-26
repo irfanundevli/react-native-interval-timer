@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import IntervalCard from './card';
+import Interval from './interval';
 import { useCountdown } from '@/hooks/countdown';
 import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
@@ -42,7 +42,7 @@ export default function IntervalTimer({ workout }: Props) {
       </View>
 
       <View style={styles.intervals}>
-        <IntervalCard
+        <Interval
           name={currentInterval.name}
           size="2xl"
           testID="current-interval"
@@ -50,7 +50,7 @@ export default function IntervalTimer({ workout }: Props) {
           type={currentInterval.type}
         />
         {nextInterval && (
-          <IntervalCard
+          <Interval
             name={nextInterval.name}
             size="md"
             testID="next-interval"
