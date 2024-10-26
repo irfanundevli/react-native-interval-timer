@@ -5,6 +5,7 @@ import { useCountdown } from '@/hooks/countdown';
 import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
 import Status from './status';
+import { IconButton } from '@/ui/components';
 
 interface Props {
   workout: Workout;
@@ -66,9 +67,9 @@ export default function IntervalTimer({ workout }: Props) {
 
       <View style={styles.footer}>
         {countdown.state === 'RUNNING' ? (
-          <Button title="Stop" testID="stop" onPress={() => countdown.stop()} />
+          <IconButton icon="stop" onPress={() => countdown.stop()} testID="stop" />
         ) : (
-          <Button title="Start" testID="play" onPress={() => countdown.start()} />
+          <IconButton icon="play" onPress={() => countdown.start()} testID="play" />
         )}
       </View>
     </View>
