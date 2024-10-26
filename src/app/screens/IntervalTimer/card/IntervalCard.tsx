@@ -30,7 +30,6 @@ export default function IntervalCard({ name, size, testID, time, type }: Props) 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingHorizontal: 6,
   },
   content: {
     flex: 1,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import IntervalCard from './card';
 import { useCountdown } from '@/hooks/countdown';
 import { Workout } from '@/store';
@@ -30,13 +30,14 @@ export default function IntervalTimer({ workout }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.reset}>
-        <Button
+        <IconButton
+          icon="refresh"
           onPress={() => {
             workout.reset();
             countdown.reset();
           }}
           testID="reset"
-          title="Reset"
+          type="clean"
         />
       </View>
 
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     flex: 1,
     justifyContent: 'space-between',
+    padding: 6,
     width: '100%',
   },
   intervals: {
@@ -94,9 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   reset: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
   },
   status: {
     flexDirection: 'row',
