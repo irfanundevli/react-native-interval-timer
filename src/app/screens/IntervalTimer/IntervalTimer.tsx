@@ -15,13 +15,17 @@ export default function IntervalTimer({ workout }: Props) {
   const currentInterval = workout.currentInterval;
   const nextInterval = workout.nextInterval;
   const countdown = useCountdown(currentInterval.duration);
+  const resetInterval = () => {
+    workout.reset();
+    countdown.reset();
+  };
 
   if (countdown.isFinished) {
     if (nextInterval) {
       workout.next();
       countdown.restart(nextInterval.duration);
     } else {
-      countdown.stop();
+      resetInterval();
     }
   }
 
@@ -30,15 +34,7 @@ export default function IntervalTimer({ workout }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.reset}>
-        <IconButton
-          icon="refresh"
-          onPress={() => {
-            workout.reset();
-            countdown.reset();
-          }}
-          testID="reset"
-          type="clean"
-        />
+        <IconButton icon="refresh" onPress={resetInterval} testID="reset" type="clean" />
       </View>
 
       <View style={styles.intervals}>

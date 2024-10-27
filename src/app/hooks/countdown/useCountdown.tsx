@@ -15,9 +15,10 @@ interface CountDown {
 
 let intervalId: any;
 
-export default function useCountdown(startTimeInMillis: number): CountDown {
+export default function useCountdown(initialStartTimeInMillis: number): CountDown {
   const [state, setState] = useState<State>('NOT-STARTED');
-  const [timeMillis, setTimeMillis] = useState(startTimeInMillis);
+  const [time, setTime] = useState(initialStartTimeInMillis);
+  const [initialTime] = useState(initialStartTimeInMillis);
 
   useEffect(() => {
     return () => clearInterval(intervalId);
@@ -26,21 +27,21 @@ export default function useCountdown(startTimeInMillis: number): CountDown {
   const reset = useCallback(() => {
     clearInterval(intervalId);
     setState('NOT-STARTED');
-    setTimeMillis(startTimeInMillis);
-  }, [startTimeInMillis]);
+    setTime(initialTime);
+  }, [initialTime]);
 
   const restart = useCallback((time: number) => {
     clearInterval(intervalId);
     intervalId = setInterval(() => {
-      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
+      setTime((prev) => (prev >= 10 ? prev - 10 : 0));
     }, 10);
     setState('RUNNING');
-    setTimeMillis(time);
+    setTime(time);
   }, []);
 
   const start = useCallback(() => {
     intervalId = setInterval(() => {
-      setTimeMillis((prev) => (prev >= 10 ? prev - 10 : 0));
+      setTime((prev) => (prev >= 10 ? prev - 10 : 0));
     }, 10);
     setState('RUNNING');
   }, []);
@@ -51,13 +52,13 @@ export default function useCountdown(startTimeInMillis: number): CountDown {
   }, []);
 
   return {
-    isFinished: timeMillis === 0,
+    isFinished: time === 0,
     reset,
     restart,
     start,
     state,
     stop,
-    time: timeMillis,
-    formattedTime: millisecondsToTime(timeMillis),
+    time,
+    formattedTime: millisecondsToTime(time),
   };
 }

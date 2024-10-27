@@ -12,6 +12,12 @@ describe('Interval Timer', () => {
     });
   };
 
+  const currentInterval = () => screen.getByTestId('current-interval');
+  const cycles = () => screen.getByTestId('cycles');
+  const nextInterval = () => screen.getByTestId('next-interval');
+  const remaining = () => screen.getByTestId('remaining');
+  const rounds = () => screen.getByTestId('rounds');
+
   const pressButton = (testID: string) => {
     act(() => {
       fireEvent.press(screen.getByTestId(testID));
@@ -42,9 +48,8 @@ describe('Interval Timer', () => {
     pressButton('play');
     advanceTimersByTime(2 * SECOND);
 
-    const currInterval = screen.getByTestId('current-interval');
-    expect(within(currInterval).getByText('Exercise')).toBeOnTheScreen();
-    expect(within(currInterval).getByText('00:58')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('Exercise')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('00:58')).toBeOnTheScreen();
   });
 
   it('displays next interval', () => {
@@ -56,9 +61,8 @@ describe('Interval Timer', () => {
     });
     render(<IntervalTimer workout={workout} />);
 
-    const nextInterval = screen.getByTestId('next-interval');
-    expect(within(nextInterval).getByText('Rest')).toBeOnTheScreen();
-    expect(within(nextInterval).getByText('00:10')).toBeOnTheScreen();
+    expect(within(nextInterval()).getByText('Rest')).toBeOnTheScreen();
+    expect(within(nextInterval()).getByText('00:10')).toBeOnTheScreen();
   });
 
   it('displays next interval as current interval when the current interval is finished', () => {
@@ -73,9 +77,8 @@ describe('Interval Timer', () => {
 
     advanceTimersByTime(5 * SECOND);
 
-    const currInterval = screen.getByTestId('current-interval');
-    expect(within(currInterval).getByText('Rest')).toBeOnTheScreen();
-    expect(within(currInterval).getByText('00:02')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('Rest')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('00:02')).toBeOnTheScreen();
   });
 
   it('displays total remaining time', () => {
@@ -90,9 +93,8 @@ describe('Interval Timer', () => {
 
     advanceTimersByTime(5 * SECOND);
 
-    const remaining = screen.getByTestId('remaining');
-    expect(within(remaining).getByText('REMAINING')).toBeOnTheScreen();
-    expect(within(remaining).getByText('01:05')).toBeOnTheScreen();
+    expect(within(remaining()).getByText('REMAINING')).toBeOnTheScreen();
+    expect(within(remaining()).getByText('01:05')).toBeOnTheScreen();
   });
 
   it('displays rounds ', () => {
@@ -105,17 +107,16 @@ describe('Interval Timer', () => {
     render(<IntervalTimer workout={workout} />);
 
     pressButton('play');
-    const rounds = screen.getByTestId('rounds');
-    expect(within(rounds).getByText('1/3')).toBeOnTheScreen();
-    expect(within(rounds).getByText('ROUNDS')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('1/3')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('ROUNDS')).toBeOnTheScreen();
 
     advanceTimersByTime(64 * SECOND);
-    expect(within(rounds).getByText('1/3')).toBeOnTheScreen();
-    expect(within(rounds).getByText('ROUNDS')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('1/3')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('ROUNDS')).toBeOnTheScreen();
 
     advanceTimersByTime(65 * SECOND);
-    expect(within(rounds).getByText('2/3')).toBeOnTheScreen();
-    expect(within(rounds).getByText('ROUNDS')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('2/3')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('ROUNDS')).toBeOnTheScreen();
   });
 
   it('displays cycles ', () => {
@@ -128,9 +129,9 @@ describe('Interval Timer', () => {
     render(<IntervalTimer workout={workout} />);
 
     pressButton('play');
-    const cycles = screen.getByTestId('cycles');
-    expect(within(cycles).getByText('1/1')).toBeOnTheScreen();
-    expect(within(cycles).getByText('CYCLES')).toBeOnTheScreen();
+
+    expect(within(cycles()).getByText('1/1')).toBeOnTheScreen();
+    expect(within(cycles()).getByText('CYCLES')).toBeOnTheScreen();
   });
 
   it('is paused when the stop button is pressed', () => {
@@ -147,8 +148,7 @@ describe('Interval Timer', () => {
     pressButton('stop');
     advanceTimersByTime(5 * SECOND);
 
-    const currInterval = screen.getByTestId('current-interval');
-    expect(within(currInterval).getByText('00:53')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('00:53')).toBeOnTheScreen();
   });
 
   it('resumes when the start button is pressed after stopping the countdown first', () => {
@@ -167,8 +167,7 @@ describe('Interval Timer', () => {
     pressButton('play');
     advanceTimersByTime(2 * SECOND);
 
-    const currInterval = screen.getByTestId('current-interval');
-    expect(within(currInterval).getByText('00:51')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('00:51')).toBeOnTheScreen();
   });
 
   it('resets the timer', () => {
@@ -184,15 +183,11 @@ describe('Interval Timer', () => {
 
     pressButton('reset');
 
-    const currInterval = screen.getByTestId('current-interval');
-    expect(within(currInterval).getByText('Exercise')).toBeOnTheScreen();
-    expect(within(currInterval).getByText('01:00')).toBeOnTheScreen();
-    const nextInterval = screen.getByTestId('next-interval');
-    expect(within(nextInterval).getByText('Rest')).toBeOnTheScreen();
-    expect(within(nextInterval).getByText('00:05')).toBeOnTheScreen();
-    const rounds = screen.getByTestId('rounds');
-    expect(within(rounds).getByText('1/3')).toBeOnTheScreen();
-    const cycles = screen.getByTestId('cycles');
-    expect(within(cycles).getByText('1/2')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('Exercise')).toBeOnTheScreen();
+    expect(within(currentInterval()).getByText('01:00')).toBeOnTheScreen();
+    expect(within(nextInterval()).getByText('Rest')).toBeOnTheScreen();
+    expect(within(nextInterval()).getByText('00:05')).toBeOnTheScreen();
+    expect(within(rounds()).getByText('1/3')).toBeOnTheScreen();
+    expect(within(cycles()).getByText('1/2')).toBeOnTheScreen();
   });
 });
