@@ -41,4 +41,10 @@ describe('IconButton', () => {
 
     expect(icon()).toHaveProp('size', 48);
   });
+
+  it('renders with the correct type', () => {
+    render(<IconButton icon="play" onPress={() => {}} testID={testID} type="clean" />);
+
+    expect(iconButton()).toHaveStyle({ borderColor: undefined, borderRadius: undefined, borderWidth: undefined });
+  });
 });
