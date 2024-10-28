@@ -1,1 +1,0 @@
-export { IntervalTimer } from './IntervalTimer';

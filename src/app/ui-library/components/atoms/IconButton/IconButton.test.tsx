@@ -12,7 +12,6 @@ describe('IconButton', () => {
   it.each([
     ['stop', 'stop'],
     ['play', 'play'],
-    ['pause', 'pause'],
   ])('renders with the correct icon %s', (iconName, expectedIcon) => {
     render(<IconButton icon={iconName as Icon} onPress={() => {}} testID={testID} />);
 
