@@ -2,8 +2,21 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react-n
 import IntervalTimer from './IntervalTimer';
 import { Workout } from '@/store';
 
+const mockedNavigate = jest.fn();
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedNavigate,
+    }),
+  };
+});
+
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
+
+jest.mock('@react-navigation/native');
 
 describe('Interval Timer', () => {
   const advanceTimersByTime = (timeInMillis: number) => {
@@ -189,5 +202,19 @@ describe('Interval Timer', () => {
     expect(within(nextInterval()).getByText('00:05')).toBeOnTheScreen();
     expect(within(rounds()).getByText('1/3')).toBeOnTheScreen();
     expect(within(cycles()).getByText('1/2')).toBeOnTheScreen();
+  });
+
+  it('goes to the interval settings screen', () => {
+    const workout = new Workout({
+      cycles: 1,
+      exercise: { type: 'exercise', name: 'Exercise', duration: 1 * MINUTE },
+      rest: { type: 'rest', name: 'Rest', duration: 5 * SECOND },
+      roundsPerCycle: 3,
+    });
+    render(<IntervalTimer workout={workout} />);
+
+    pressButton('timer-config');
+
+    expect(mockedNavigate).toHaveBeenNthCalledWith(1, 'IntervalSettings');
   });
 });

@@ -6,12 +6,15 @@ import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
 import Status from './status';
 import { IconButton } from '@/ui/components';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   workout: Workout;
 }
 
 export default function IntervalTimer({ workout }: Props) {
+  const navigation = useNavigation();
+
   const currentInterval = workout.currentInterval;
   const nextInterval = workout.nextInterval;
   const countdown = useCountdown(currentInterval.duration);
@@ -34,9 +37,14 @@ export default function IntervalTimer({ workout }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.reset}>
+        <IconButton
+          icon="timer-cog-outline"
+          onPress={() => navigation.navigate('IntervalSettings')}
+          testID="timer-config"
+          type="clean"
+        />
         <IconButton icon="refresh" onPress={resetInterval} testID="reset" type="clean" />
       </View>
-
       <View style={styles.intervals}>
         <Interval
           name={currentInterval.name}
@@ -55,13 +63,11 @@ export default function IntervalTimer({ workout }: Props) {
           />
         )}
       </View>
-
       <View style={styles.status}>
         <Status name="ROUNDS" testID="rounds" value={workout.roundStatus} />
         <Status name="REMAINING" testID="remaining" value={millisecondsToTime(totalRemainingTime)} />
         <Status name="CYCLES" testID="cycles" value={workout.cycleStatus} />
       </View>
-
       <View style={styles.footer}>
         {countdown.state === 'RUNNING' ? (
           <IconButton icon="stop" onPress={() => countdown.stop()} testID="stop" />
@@ -93,6 +99,7 @@ const styles = StyleSheet.create({
   },
   reset: {
     alignSelf: 'flex-end',
+    flexDirection: 'row',
   },
   status: {
     flexDirection: 'row',
