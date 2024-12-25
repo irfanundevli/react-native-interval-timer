@@ -6711,6 +6711,11 @@ react-native-screens@~4.4.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-timer-picker@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-timer-picker/-/react-native-timer-picker-2.0.2.tgz#a70b7270a391f4222830c371e6c052bd21cc0e8b"
+  integrity sha512-DG6djrFpiPYQUFqiaGMCEsKxJAGTXRZpB1rqJ+1ugdKbGtx9Vbx4wogObS/+AQxRhh4oMFiaZW9vacu89VUwbA==
+
 react-native@0.76.5:
   version "0.76.5"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.76.5.tgz#3ce43d3c31f46cfd98e56ef2dfc70866c04ad185"
