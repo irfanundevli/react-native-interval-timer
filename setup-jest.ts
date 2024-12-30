@@ -16,3 +16,14 @@ jest.mock('react-native-reanimated', () => {
 
 // To fix "TypeError: loadedNativeFonts.forEach is not a function." error when importing @expo/vector-icons
 jest.mock('expo-font');
+
+// To fix " TypeError: Invalid attempt to destructure non-iterable instance. In order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+jest.mock('expo-av', () => {
+  return {
+    Audio: {
+      Sound: {
+        createAsync: jest.fn().mockResolvedValue({}),
+      },
+    },
+  };
+});
