@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors } from '@/ui/styles';
 
-export type Icon = 'play' | 'refresh' | 'stop' | 'timer-cog-outline';
+export type Icon = 'play' | 'refresh' | 'stop' | 'timer-cog-outline' | 'close';
 type Type = 'clean' | 'outline';
 
 interface Props {
@@ -41,6 +41,7 @@ function getIcon(color: Colors, icon: Icon, size: number) {
     case 'play':
     case 'stop':
       return <FontAwesome5 name={icon} size={size} color={color} />;
+    case 'close':
     case 'timer-cog-outline':
       return <MaterialCommunityIcons name={icon} size={size} color={color} />;
     default:

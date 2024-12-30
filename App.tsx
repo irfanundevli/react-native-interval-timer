@@ -16,9 +16,9 @@ export default function App() {
     <NavigationContainer>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
-          <Stack.Navigator initialRouteName="IntervalTimer">
-            <Stack.Screen name="IntervalTimer">{() => <IntervalTimer workout={workout} />}</Stack.Screen>
+          <Stack.Navigator initialRouteName="IntervalTimer" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="IntervalSettings" component={IntervalSettings} />
+            <Stack.Screen name="IntervalTimer">{() => <IntervalTimer workout={workout} />}</Stack.Screen>
           </Stack.Navigator>
           <StatusBar style="auto" />
         </SafeAreaView>
