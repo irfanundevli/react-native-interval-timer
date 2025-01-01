@@ -1,4 +1,4 @@
 export { getWorkout } from './fakeStore';
 export type { IntervalType } from './types';
 export { Workout } from './Workout';
-export { storeExerciseDuration } from './asyncStorage';
+export { storeExerciseDuration, readExerciseDuration } from './asyncStorage';

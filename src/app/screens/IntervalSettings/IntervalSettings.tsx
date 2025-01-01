@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Divider, DurationPickerModal } from '@/ui/components';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { timeToString } from '@/utils/time';
-import { storeExerciseDuration } from '../../store';
+import { storeExerciseDuration, readExerciseDuration } from '@/store';
 
 interface IntervalDuration {
   minutes: number;
@@ -22,6 +22,14 @@ export default function IntervalSettings() {
   const handleIntervalDurationChange = useCallback((duration: IntervalDuration) => {
     setExerciseDuration(duration);
     storeExerciseDuration(duration);
+  }, []);
+
+  useEffect(() => {
+    async function readExerciseDurationFromStorage() {
+      setExerciseDuration(await readExerciseDuration());
+    }
+
+    readExerciseDurationFromStorage();
   }, []);
 
   return (
