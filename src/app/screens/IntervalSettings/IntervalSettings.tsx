@@ -3,23 +3,29 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Divider, DurationPickerModal } from '@/ui/components';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { timeToString } from '@/utils/time';
+import { storeExerciseDuration } from '../../store';
+
+interface IntervalDuration {
+  minutes: number;
+  seconds: number;
+}
 
 export default function IntervalSettings() {
   const [showDurationPicker, setShowDurationPicker] = useState(false);
+  const [exerciseDuration, setExerciseDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
 
   const toggleDurationPickerModal = useCallback(() => {
     setShowDurationPicker(!showDurationPicker);
   }, [showDurationPicker]);
 
+  const handleIntervalDurationChange = useCallback((duration: IntervalDuration) => {
+    setExerciseDuration(duration);
+    storeExerciseDuration(duration);
+  }, []);
+
   return (
     <>
-      <DurationPickerModal
-        title="Exercise"
-        visible={showDurationPicker}
-        toggleVisibility={toggleDurationPickerModal}
-        onApply={() => {}}
-      />
-
       <View style={styles.container}>
         <Text style={styles.screenTitle}>Quick routine</Text>
 
@@ -35,12 +41,12 @@ export default function IntervalSettings() {
 
               <TouchableHighlight onPress={toggleDurationPickerModal}>
                 <View style={styles.timeContainer}>
-                  <Text style={styles.time}>01:00</Text>
+                  <Text style={styles.time}>{timeToString(exerciseDuration)}</Text>
                 </View>
               </TouchableHighlight>
             </View>
 
-            <Divider color="black" />
+            <Divider color="#9A9DA6" />
 
             <View style={styles.interval} testID="rest">
               <View style={styles.intervalMetaData}>
@@ -87,6 +93,14 @@ export default function IntervalSettings() {
           <Text style={styles.startButtonText}>2:20</Text>
         </View>
       </View>
+
+      <DurationPickerModal
+        title="Exercise"
+        visible={showDurationPicker}
+        toggleVisibility={toggleDurationPickerModal}
+        onApply={handleIntervalDurationChange}
+        initialDuration={exerciseDuration}
+      />
     </>
   );
 }
@@ -95,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#807E7E',
+    backgroundColor: '#F2F3F8',
   },
   screenTitle: {
     fontSize: 32,
@@ -108,6 +122,7 @@ const styles = StyleSheet.create({
   intervalsTitle: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#9A9DA6',
   },
   intervals: {
     backgroundColor: '#fff',
@@ -139,6 +154,7 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#03C389',
   },
   repeatContainer: {
     backgroundColor: '#fff',
@@ -155,7 +171,7 @@ const styles = StyleSheet.create({
     bottom: 16,
     left: 16,
     right: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     padding: 16,
     borderRadius: 16,
     flexDirection: 'row',
@@ -163,7 +179,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   startButtonText: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
   },
 });

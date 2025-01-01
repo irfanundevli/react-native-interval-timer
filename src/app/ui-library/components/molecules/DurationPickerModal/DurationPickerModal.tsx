@@ -2,24 +2,36 @@ import { Text, View, Modal, StyleSheet } from 'react-native';
 import { Button, IconButton } from '@/ui/components';
 import TimePicker from '@/ui/components/third-party/TimePicker/TimePicker';
 import { Colors } from '@/ui/styles';
+import { useState } from 'react';
+
+interface Duration {
+  minutes: number;
+  seconds: number;
+}
 
 interface Props {
-  title: string;
   description?: string;
-  onApply: (time: number) => void;
+  initialDuration?: Duration;
+  title: string;
   visible: boolean;
+  onApply: (time: Duration) => void;
   toggleVisibility: () => void;
 }
 
+const DEFAULT_DURATION = { minutes: 0, seconds: 0 };
+
 export default function DurationPickerModal({
   description = 'Choose duration',
+  initialDuration = DEFAULT_DURATION,
   onApply,
   title,
   toggleVisibility,
   visible,
 }: Props) {
+  const [duration, setDuration] = useState(initialDuration);
+
   const handleApply = () => {
-    onApply(0);
+    onApply(duration);
     toggleVisibility();
   };
 
@@ -38,7 +50,7 @@ export default function DurationPickerModal({
           <IconButton icon="close" onPress={toggleVisibility} color={Colors.BLACK} type="clean" />
         </View>
 
-        <TimePicker />
+        <TimePicker initialValue={initialDuration} onTimeChange={setDuration} />
 
         <Button title="Apply" onPress={handleApply} />
       </View>
