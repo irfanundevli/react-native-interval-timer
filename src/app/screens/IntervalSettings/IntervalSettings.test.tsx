@@ -1,6 +1,11 @@
 import React from 'react';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import IntervalSettings from './IntervalSettings';
+import { storeExerciseDuration } from '@/store';
+
+jest.mock('@/store', () => ({
+  storeExerciseDuration: jest.fn(),
+}));
 
 describe.only('Interval Settings', () => {
   it('displays screen title', () => {
@@ -30,6 +35,17 @@ describe.only('Interval Settings', () => {
       const exercise = screen.getByTestId('exercise');
       fireEvent.press(within(exercise).getByText('01:00'));
       expect(screen.getByTestId('durationPicker')).toBeVisible();
+    });
+
+    it('stores exercise duration after picking a new duration from the duration picker', () => {
+      render(<IntervalSettings />);
+
+      const exercise = screen.getByTestId('exercise');
+      fireEvent.press(within(exercise).getByText('01:00'));
+
+      fireEvent.press(screen.getByText('Apply'));
+
+      expect(storeExerciseDuration).toHaveBeenCalledWith(expect.objectContaining({ minutes: 1, seconds: 0 }));
     });
 
     it('displays rest interval', () => {

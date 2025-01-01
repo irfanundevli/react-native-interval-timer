@@ -1,1 +1,1 @@
-export { millisecondsToTime } from "./timeConverter";
+export { millisecondsToTime, timeToString } from './timeConverter';

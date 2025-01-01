@@ -4,22 +4,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
-interface Props {
-  hideHours?: boolean;
+interface Time {
+  minutes: number;
+  seconds: number;
 }
 
-export default function TimePicker({ hideHours = true }: Props) {
+interface Props {
+  initialValue?: Time;
+  onTimeChange?: (time: Time) => void;
+}
+
+export default function TimePicker({ initialValue, onTimeChange }: Props) {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', right: -10, paddingVertical: 10 }}>
       <TimerPicker
-        padWithNItems={2}
-        hideHours={hideHours}
-        hourLabel=":"
-        minuteLabel=":"
-        secondLabel=""
         Audio={Audio}
-        LinearGradient={LinearGradient}
         Haptics={Haptics}
+        hideHours
+        initialValue={initialValue}
+        LinearGradient={LinearGradient}
+        minuteLabel=":"
+        onDurationChange={onTimeChange}
+        padWithNItems={2}
+        secondLabel=""
         styles={{
           backgroundColor: 'transparent',
           pickerContainer: {
