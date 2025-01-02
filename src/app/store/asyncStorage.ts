@@ -8,13 +8,15 @@ interface Duration {
 interface IntervalSettings {
   exerciseDuration: Duration;
   restDuration: Duration;
+  repeat: number;
 }
 
 const DEFAULT_DURATION: Duration = { minutes: 1, seconds: 0 };
 
-const DEFAULT_INTERVAL_SETTINGS: IntervalSettings = {
+export const DEFAULT_INTERVAL_SETTINGS: IntervalSettings = {
   exerciseDuration: DEFAULT_DURATION,
   restDuration: DEFAULT_DURATION,
+  repeat: 1,
 };
 
 export const storeIntervalSettings = async (settings: IntervalSettings): Promise<void> => {

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
-import { Divider, DurationPickerModal } from '@/ui/components';
+import { Divider, DurationPickerModal, NumberPickerModal } from '@/ui/components';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { timeToString } from '@/utils/time';
@@ -15,7 +15,9 @@ export default function IntervalSettings() {
   const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [exerciseDuration, setExerciseDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
   const [restDuration, setRestDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
+  const [repeat, setRepeat] = useState(1);
   const [showRestDurationPicker, setShowRestDurationPicker] = useState(false);
+  const [showRepeatPicker, setShowRepeatPicker] = useState(false);
 
   const toggleDurationPickerModal = useCallback(() => {
     setShowDurationPicker(!showDurationPicker);
@@ -24,9 +26,9 @@ export default function IntervalSettings() {
   const handleIntervalDurationChange = useCallback(
     (duration: IntervalDuration) => {
       setExerciseDuration(duration);
-      storeIntervalSettings({ exerciseDuration: duration, restDuration });
+      storeIntervalSettings({ exerciseDuration: duration, restDuration, repeat });
     },
-    [restDuration],
+    [restDuration, repeat],
   );
 
   const toggleRestDurationPickerModal = useCallback(() => {
@@ -36,16 +38,29 @@ export default function IntervalSettings() {
   const handleRestDurationChange = useCallback(
     (duration: IntervalDuration) => {
       setRestDuration(duration);
-      storeIntervalSettings({ exerciseDuration, restDuration: duration });
+      storeIntervalSettings({ exerciseDuration, restDuration: duration, repeat });
     },
-    [exerciseDuration],
+    [exerciseDuration, repeat],
+  );
+
+  const toggleRepeatPickerModal = useCallback(() => {
+    setShowRepeatPicker(!showRepeatPicker);
+  }, [showRepeatPicker]);
+
+  const handleRepeatChange = useCallback(
+    (value: number) => {
+      setRepeat(value);
+      storeIntervalSettings({ exerciseDuration, restDuration, repeat: value });
+    },
+    [exerciseDuration, restDuration],
   );
 
   useEffect(() => {
     async function readIntervalSettingsFromStorage() {
-      const { exerciseDuration, restDuration } = await readIntervalSettings();
+      const { exerciseDuration, restDuration, repeat } = await readIntervalSettings();
       setExerciseDuration(exerciseDuration);
       setRestDuration(restDuration);
+      setRepeat(repeat);
     }
 
     readIntervalSettingsFromStorage();
@@ -110,16 +125,28 @@ export default function IntervalSettings() {
           </View>
 
           <View style={styles.repeatContainer}>
-            <View style={styles.interval} testID="repeat">
-              <View style={styles.intervalMetaData}>
-                <Ionicons name="repeat-outline" size={36} color="black" />
-                <Text style={styles.intervalName}>Repeat</Text>
+            <>
+              <View style={styles.interval} testID="repeat">
+                <View style={styles.intervalMetaData}>
+                  <Ionicons name="repeat-outline" size={36} color="black" />
+                  <Text style={styles.intervalName}>Repeat</Text>
+                </View>
+
+                <TouchableHighlight onPress={toggleRepeatPickerModal}>
+                  <View style={styles.timeContainer}>
+                    <Text style={styles.time}>x{repeat}</Text>
+                  </View>
+                </TouchableHighlight>
               </View>
 
-              <View style={styles.timeContainer}>
-                <Text style={styles.time}>x2</Text>
-              </View>
-            </View>
+              <NumberPickerModal
+                initialValue={repeat}
+                onApply={handleRepeatChange}
+                title="Repeat"
+                toggleVisibility={toggleRepeatPickerModal}
+                visible={showRepeatPicker}
+              />
+            </>
           </View>
         </View>
 

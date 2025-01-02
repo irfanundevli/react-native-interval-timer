@@ -4,48 +4,38 @@ import TimePicker from '@/ui/components/third-party/TimePicker/TimePicker';
 import { Colors } from '@/ui/styles';
 import { useState } from 'react';
 
-interface Duration {
-  minutes: number;
-  seconds: number;
-}
-
 interface Props {
   description?: string;
-  initialDuration?: Duration;
+  initialValue?: number;
   title: string;
   visible: boolean;
-  onApply: (time: Duration) => void;
+  onApply: (value: number) => void;
   toggleVisibility: () => void;
 }
 
-const DEFAULT_DURATION = { minutes: 0, seconds: 0 };
-
-export default function DurationPickerModal({
+export default function NumberPickerModal({
   description = 'Choose duration',
-  initialDuration = DEFAULT_DURATION,
+  initialValue = 1,
   onApply,
   title,
   toggleVisibility,
   visible,
 }: Props) {
-  const [duration, setDuration] = useState(initialDuration);
+  const [value, setValue] = useState(initialValue);
 
   const handleApply = () => {
-    onApply(duration);
+    onApply(value);
     toggleVisibility();
   };
 
-  const handleTimeChange = (time: { minutes?: number; seconds: number }) => {
-    setDuration({
-      minutes: time.minutes || 0,
-      seconds: time.seconds,
-    });
+  const handleValueChange = (pickerValue: { seconds: number }) => {
+    setValue(pickerValue.seconds);
   };
 
   return (
     <Modal animationType="slide" visible={visible} onRequestClose={toggleVisibility} transparent>
       <View style={styles.modalView}>
-        <Text style={styles.title} testID="durationPickerModalTitle">
+        <Text style={styles.title} testID="numberPickerModalTitle">
           {title}
         </Text>
         <Text style={styles.description}>{description}</Text>
@@ -53,7 +43,7 @@ export default function DurationPickerModal({
           <IconButton icon="close" onPress={toggleVisibility} color={Colors.BLACK} type="clean" />
         </View>
 
-        <TimePicker initialValue={initialDuration} onTimeChange={handleTimeChange} />
+        <TimePicker initialValue={{ seconds: initialValue }} onTimeChange={handleValueChange} hideMinutes />
 
         <Button title="Apply" onPress={handleApply} />
       </View>
