@@ -5,23 +5,33 @@ interface Duration {
   seconds: number;
 }
 
+interface IntervalSettings {
+  exerciseDuration: Duration;
+  restDuration: Duration;
+}
+
 const DEFAULT_DURATION: Duration = { minutes: 1, seconds: 0 };
 
-export const storeExerciseDuration = async (time: Duration): Promise<void> => {
+const DEFAULT_INTERVAL_SETTINGS: IntervalSettings = {
+  exerciseDuration: DEFAULT_DURATION,
+  restDuration: DEFAULT_DURATION,
+};
+
+export const storeIntervalSettings = async (settings: IntervalSettings): Promise<void> => {
   try {
-    const jsonValue = JSON.stringify(time);
-    await AsyncStorage.setItem('@exercise_duration', jsonValue);
+    const jsonValue = JSON.stringify(settings);
+    await AsyncStorage.setItem('@interval_settings', jsonValue);
   } catch (e) {
-    console.error('Failed to save the exercise duration.', e);
+    console.error('Failed to save the interval settings.', e);
   }
 };
 
-export const readExerciseDuration = async (): Promise<Duration> => {
+export const readIntervalSettings = async (): Promise<IntervalSettings> => {
   try {
-    const jsonValue = await AsyncStorage.getItem('@exercise_duration');
-    return jsonValue != null ? JSON.parse(jsonValue) : DEFAULT_DURATION;
+    const jsonValue = await AsyncStorage.getItem('@interval_settings');
+    return jsonValue != null ? JSON.parse(jsonValue) : DEFAULT_INTERVAL_SETTINGS;
   } catch (e) {
-    console.error('Failed to fetch the exercise duration.', e);
-    return DEFAULT_DURATION;
+    console.error('Failed to fetch the interval settings.', e);
+    return DEFAULT_INTERVAL_SETTINGS;
   }
 };

@@ -1,11 +1,13 @@
 import React from 'react';
 import { fireEvent, render, screen, within, act, waitFor } from '@testing-library/react-native';
 import IntervalSettings from './IntervalSettings';
-import { readExerciseDuration, storeExerciseDuration } from '@/store';
+import { readIntervalSettings, storeIntervalSettings } from '@/store';
 
 jest.mock('@/store', () => ({
-  storeExerciseDuration: jest.fn(),
-  readExerciseDuration: jest.fn(),
+  storeIntervalSettings: jest.fn(),
+  readIntervalSettings: jest
+    .fn()
+    .mockResolvedValue({ exerciseDuration: { minutes: 1, seconds: 0 }, restDuration: { minutes: 1, seconds: 0 } }),
 }));
 
 describe('Interval Settings', () => {
@@ -30,7 +32,7 @@ describe('Interval Settings', () => {
         expect(within(exercise).getByText('Exercise')).toBeVisible();
       });
 
-      it('stores exercise duration after picking a new duration from the duration picker', async () => {
+      it('stores exercise duration when apply button is pressed on duration picker modal', async () => {
         render(<IntervalSettings />);
 
         const exercise = screen.getByTestId('exercise');
@@ -38,13 +40,19 @@ describe('Interval Settings', () => {
           fireEvent.press(within(exercise).getByText('01:00'));
         });
 
+        expect(screen.getByTestId('durationPickerModalTitle')).toHaveTextContent('Exercise');
         fireEvent.press(screen.getByText('Apply'));
 
-        expect(storeExerciseDuration).toHaveBeenCalledWith(expect.objectContaining({ minutes: 1, seconds: 0 }));
+        expect(storeIntervalSettings).toHaveBeenCalledWith(
+          expect.objectContaining({ exerciseDuration: { minutes: 1, seconds: 0 } }),
+        );
       });
 
       it('displays the exercise duration fetched from storage', async () => {
-        (readExerciseDuration as jest.Mock).mockResolvedValueOnce({ minutes: 2, seconds: 30 });
+        (readIntervalSettings as jest.Mock).mockResolvedValue({
+          exerciseDuration: { minutes: 2, seconds: 30 },
+          restDuration: { minutes: 1, seconds: 0 },
+        });
 
         render(<IntervalSettings />);
 
@@ -53,12 +61,45 @@ describe('Interval Settings', () => {
       });
     });
 
-    it('displays rest interval', async () => {
-      render(<IntervalSettings />);
+    describe('rest interval', () => {
+      it('displays rest interval setting', async () => {
+        render(<IntervalSettings />);
 
-      const rest = await screen.findByTestId('rest');
-      expect(within(rest).getByText('Rest')).toBeVisible();
-      expect(within(rest).getByText('00:10')).toBeVisible();
+        const rest = await screen.findByTestId('rest');
+        expect(within(rest).getByText('Rest')).toBeVisible();
+      });
+
+      it('stores rest duration when apply button is pressed on duration picker modal', async () => {
+        (readIntervalSettings as jest.Mock).mockResolvedValue({
+          exerciseDuration: { minutes: 2, seconds: 30 },
+          restDuration: { minutes: 0, seconds: 45 },
+        });
+        render(<IntervalSettings />);
+
+        const rest = await screen.findByTestId('rest');
+        await act(async () => {
+          fireEvent.press(within(rest).getByText('00:45'));
+        });
+
+        expect(screen.getByTestId('durationPickerModalTitle')).toHaveTextContent('Rest');
+        fireEvent.press(screen.getByText('Apply'));
+
+        expect(storeIntervalSettings).toHaveBeenCalledWith(
+          expect.objectContaining({ restDuration: { minutes: 0, seconds: 45 } }),
+        );
+      });
+
+      it('displays the rest duration fetched from storage', async () => {
+        (readIntervalSettings as jest.Mock).mockResolvedValue({
+          exerciseDuration: { minutes: 2, seconds: 30 },
+          restDuration: { minutes: 1, seconds: 30 },
+        });
+
+        render(<IntervalSettings />);
+
+        const rest = await screen.findByTestId('rest');
+        expect(within(rest).getByText('01:30')).toBeVisible();
+      });
     });
 
     it('displays repeat interval', async () => {

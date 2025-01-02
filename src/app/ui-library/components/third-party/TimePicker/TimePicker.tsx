@@ -15,6 +15,13 @@ interface Props {
 }
 
 export default function TimePicker({ initialValue, onTimeChange }: Props) {
+  const handleDurationChange = (time: Time) => {
+    onTimeChange?.({
+      minutes: time.minutes,
+      seconds: time.seconds,
+    });
+  };
+
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', right: -10, paddingVertical: 10 }}>
       <TimerPicker
@@ -24,7 +31,7 @@ export default function TimePicker({ initialValue, onTimeChange }: Props) {
         initialValue={initialValue}
         LinearGradient={LinearGradient}
         minuteLabel=":"
-        onDurationChange={onTimeChange}
+        onDurationChange={handleDurationChange}
         padWithNItems={2}
         secondLabel=""
         styles={{

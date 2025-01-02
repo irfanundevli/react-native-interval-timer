@@ -44,7 +44,9 @@ export default function DurationPickerModal({
       testID="durationPicker"
     >
       <View style={styles.modalView}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title} testID="durationPickerModalTitle">
+          {title}
+        </Text>
         <Text style={styles.description}>{description}</Text>
         <View style={{ position: 'absolute', right: 4, top: 12 }}>
           <IconButton icon="close" onPress={toggleVisibility} color={Colors.BLACK} type="clean" />
