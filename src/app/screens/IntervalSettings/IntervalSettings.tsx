@@ -4,7 +4,7 @@ import { Divider, DurationPickerModal } from '@/ui/components';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { timeToString } from '@/utils/time';
-import { storeExerciseDuration, readExerciseDuration } from '@/store';
+import { readIntervalSettings, storeIntervalSettings } from '@/store';
 
 interface IntervalDuration {
   minutes: number;
@@ -14,22 +14,41 @@ interface IntervalDuration {
 export default function IntervalSettings() {
   const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [exerciseDuration, setExerciseDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
+  const [restDuration, setRestDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
+  const [showRestDurationPicker, setShowRestDurationPicker] = useState(false);
 
   const toggleDurationPickerModal = useCallback(() => {
     setShowDurationPicker(!showDurationPicker);
   }, [showDurationPicker]);
 
-  const handleIntervalDurationChange = useCallback((duration: IntervalDuration) => {
-    setExerciseDuration(duration);
-    storeExerciseDuration(duration);
-  }, []);
+  const handleIntervalDurationChange = useCallback(
+    (duration: IntervalDuration) => {
+      setExerciseDuration(duration);
+      storeIntervalSettings({ exerciseDuration: duration, restDuration });
+    },
+    [restDuration],
+  );
+
+  const toggleRestDurationPickerModal = useCallback(() => {
+    setShowRestDurationPicker(!showRestDurationPicker);
+  }, [showRestDurationPicker]);
+
+  const handleRestDurationChange = useCallback(
+    (duration: IntervalDuration) => {
+      setRestDuration(duration);
+      storeIntervalSettings({ exerciseDuration, restDuration: duration });
+    },
+    [exerciseDuration],
+  );
 
   useEffect(() => {
-    async function readExerciseDurationFromStorage() {
-      setExerciseDuration(await readExerciseDuration());
+    async function readIntervalSettingsFromStorage() {
+      const { exerciseDuration, restDuration } = await readIntervalSettings();
+      setExerciseDuration(exerciseDuration);
+      setRestDuration(restDuration);
     }
 
-    readExerciseDurationFromStorage();
+    readIntervalSettingsFromStorage();
   }, []);
 
   return (
@@ -41,30 +60,52 @@ export default function IntervalSettings() {
           <Text style={styles.intervalsTitle}>INTERVALS</Text>
 
           <View style={styles.intervals}>
-            <View style={styles.interval} testID="exercise">
-              <View style={styles.intervalMetaData}>
-                <MaterialCommunityIcons name="run-fast" size={36} color="black" />
-                <Text style={styles.intervalName}>Exercise</Text>
+            <>
+              <View style={styles.interval} testID="exercise">
+                <View style={styles.intervalMetaData}>
+                  <MaterialCommunityIcons name="run-fast" size={36} color="black" />
+                  <Text style={styles.intervalName}>Exercise</Text>
+                </View>
+
+                <TouchableHighlight onPress={toggleDurationPickerModal}>
+                  <View style={styles.timeContainer}>
+                    <Text style={styles.time}>{timeToString(exerciseDuration)}</Text>
+                  </View>
+                </TouchableHighlight>
               </View>
 
-              <TouchableHighlight onPress={toggleDurationPickerModal}>
-                <View style={styles.timeContainer}>
-                  <Text style={styles.time}>{timeToString(exerciseDuration)}</Text>
-                </View>
-              </TouchableHighlight>
-            </View>
+              <DurationPickerModal
+                initialDuration={exerciseDuration}
+                onApply={handleIntervalDurationChange}
+                title="Exercise"
+                toggleVisibility={toggleDurationPickerModal}
+                visible={showDurationPicker}
+              />
+            </>
 
             <Divider color="#9A9DA6" />
 
             <View style={styles.interval} testID="rest">
-              <View style={styles.intervalMetaData}>
-                <MaterialCommunityIcons name="meditation" size={36} color="black" />
-                <Text style={styles.intervalName}>Rest</Text>
-              </View>
+              <>
+                <View style={styles.intervalMetaData}>
+                  <MaterialCommunityIcons name="meditation" size={36} color="black" />
+                  <Text style={styles.intervalName}>Rest</Text>
+                </View>
 
-              <View style={styles.timeContainer}>
-                <Text style={styles.time}>00:10</Text>
-              </View>
+                <TouchableHighlight onPress={toggleRestDurationPickerModal}>
+                  <View style={styles.timeContainer}>
+                    <Text style={styles.time}>{timeToString(restDuration)}</Text>
+                  </View>
+                </TouchableHighlight>
+
+                <DurationPickerModal
+                  initialDuration={restDuration}
+                  onApply={handleRestDurationChange}
+                  title="Rest"
+                  toggleVisibility={toggleRestDurationPickerModal}
+                  visible={showRestDurationPicker}
+                />
+              </>
             </View>
           </View>
 
@@ -101,14 +142,6 @@ export default function IntervalSettings() {
           <Text style={styles.startButtonText}>2:20</Text>
         </View>
       </View>
-
-      <DurationPickerModal
-        title="Exercise"
-        visible={showDurationPicker}
-        toggleVisibility={toggleDurationPickerModal}
-        onApply={handleIntervalDurationChange}
-        initialDuration={exerciseDuration}
-      />
     </>
   );
 }

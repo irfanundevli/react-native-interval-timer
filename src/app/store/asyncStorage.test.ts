@@ -1,60 +1,75 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { readExerciseDuration, storeExerciseDuration } from './asyncStorage';
+import { readIntervalSettings, storeIntervalSettings } from './asyncStorage';
 
 describe('asyncStorage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('storeExerciseDuration', () => {
-    it('stores the exercise duration', async () => {
-      const duration = { minutes: 5, seconds: 30 };
+  describe('storeIntervalSettings', () => {
+    it('stores the interval settings', async () => {
+      const settings = {
+        exerciseDuration: { minutes: 5, seconds: 30 },
+        restDuration: { minutes: 2, seconds: 0 },
+      };
 
-      await storeExerciseDuration(duration);
+      await storeIntervalSettings(settings);
 
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@exercise_duration', JSON.stringify(duration));
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@interval_settings', JSON.stringify(settings));
     });
 
-    it('handles errors when storing the exercise duration', async () => {
-      const duration = { minutes: 5, seconds: 30 };
+    it('handles errors when storing the interval settings', async () => {
+      const settings = {
+        exerciseDuration: { minutes: 5, seconds: 30 },
+        restDuration: { minutes: 2, seconds: 0 },
+      };
 
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       (AsyncStorage.setItem as jest.Mock).mockRejectedValueOnce(new Error('AsyncStorage error'));
 
-      await storeExerciseDuration(duration);
+      await storeIntervalSettings(settings);
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to save the exercise duration.', expect.any(Error));
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to save the interval settings.', expect.any(Error));
     });
   });
 
-  describe('readExerciseDuration', () => {
-    it('reads the stored exercise duration', async () => {
-      const duration = { minutes: 5, seconds: 30 };
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(JSON.stringify(duration));
+  describe('readIntervalSettings', () => {
+    it('reads the stored interval settings', async () => {
+      const settings = {
+        exerciseDuration: { minutes: 5, seconds: 30 },
+        restDuration: { minutes: 2, seconds: 0 },
+      };
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(JSON.stringify(settings));
 
-      const result = await readExerciseDuration();
+      const result = await readIntervalSettings();
 
-      expect(result).toEqual(duration);
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@exercise_duration');
+      expect(result).toEqual(settings);
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@interval_settings');
     });
 
-    it('returns default duration if no duration is stored', async () => {
+    it('returns default interval settings if no settings are stored', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(null);
 
-      const result = await readExerciseDuration();
+      const result = await readIntervalSettings();
 
-      expect(result).toEqual({ minutes: 1, seconds: 0 });
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@exercise_duration');
+      expect(result).toEqual({
+        exerciseDuration: { minutes: 1, seconds: 0 },
+        restDuration: { minutes: 1, seconds: 0 },
+      });
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@interval_settings');
     });
 
-    it('handles errors when reading the exercise duration', async () => {
+    it('handles errors when reading the interval settings', async () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       (AsyncStorage.getItem as jest.Mock).mockRejectedValueOnce(new Error('AsyncStorage error'));
 
-      const result = await readExerciseDuration();
+      const result = await readIntervalSettings();
 
-      expect(result).toEqual({ minutes: 1, seconds: 0 });
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to fetch the exercise duration.', expect.any(Error));
+      expect(result).toEqual({
+        exerciseDuration: { minutes: 1, seconds: 0 },
+        restDuration: { minutes: 1, seconds: 0 },
+      });
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to fetch the interval settings.', expect.any(Error));
     });
   });
 });
