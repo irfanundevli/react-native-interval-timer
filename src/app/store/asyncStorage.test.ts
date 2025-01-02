@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { readIntervalSettings, storeIntervalSettings } from './asyncStorage';
+import { DEFAULT_INTERVAL_SETTINGS, readIntervalSettings, storeIntervalSettings } from './asyncStorage';
 
 describe('asyncStorage', () => {
   beforeEach(() => {
@@ -11,6 +11,7 @@ describe('asyncStorage', () => {
       const settings = {
         exerciseDuration: { minutes: 5, seconds: 30 },
         restDuration: { minutes: 2, seconds: 0 },
+        repeat: 1,
       };
 
       await storeIntervalSettings(settings);
@@ -22,6 +23,7 @@ describe('asyncStorage', () => {
       const settings = {
         exerciseDuration: { minutes: 5, seconds: 30 },
         restDuration: { minutes: 2, seconds: 0 },
+        repeat: 1,
       };
 
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -38,6 +40,7 @@ describe('asyncStorage', () => {
       const settings = {
         exerciseDuration: { minutes: 5, seconds: 30 },
         restDuration: { minutes: 2, seconds: 0 },
+        repeat: 2,
       };
       (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(JSON.stringify(settings));
 
@@ -52,10 +55,7 @@ describe('asyncStorage', () => {
 
       const result = await readIntervalSettings();
 
-      expect(result).toEqual({
-        exerciseDuration: { minutes: 1, seconds: 0 },
-        restDuration: { minutes: 1, seconds: 0 },
-      });
+      expect(result).toEqual(DEFAULT_INTERVAL_SETTINGS);
       expect(AsyncStorage.getItem).toHaveBeenCalledWith('@interval_settings');
     });
 
@@ -65,10 +65,7 @@ describe('asyncStorage', () => {
 
       const result = await readIntervalSettings();
 
-      expect(result).toEqual({
-        exerciseDuration: { minutes: 1, seconds: 0 },
-        restDuration: { minutes: 1, seconds: 0 },
-      });
+      expect(result).toEqual(DEFAULT_INTERVAL_SETTINGS);
       expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to fetch the interval settings.', expect.any(Error));
     });
   });

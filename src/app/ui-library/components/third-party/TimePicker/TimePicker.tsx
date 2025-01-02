@@ -5,16 +5,17 @@ import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 
 interface Time {
-  minutes: number;
+  minutes?: number;
   seconds: number;
 }
 
 interface Props {
+  hideMinutes?: boolean;
   initialValue?: Time;
   onTimeChange?: (time: Time) => void;
 }
 
-export default function TimePicker({ initialValue, onTimeChange }: Props) {
+export default function TimePicker({ hideMinutes = false, initialValue, onTimeChange }: Props) {
   const handleDurationChange = (time: Time) => {
     onTimeChange?.({
       minutes: time.minutes,
@@ -28,11 +29,13 @@ export default function TimePicker({ initialValue, onTimeChange }: Props) {
         Audio={Audio}
         Haptics={Haptics}
         hideHours
+        hideMinutes={hideMinutes}
         initialValue={initialValue}
         LinearGradient={LinearGradient}
-        minuteLabel=":"
+        minuteLabel={hideMinutes ? undefined : ':'}
         onDurationChange={handleDurationChange}
         padWithNItems={2}
+        padSecondsWithZero={!hideMinutes}
         secondLabel=""
         styles={{
           backgroundColor: 'transparent',

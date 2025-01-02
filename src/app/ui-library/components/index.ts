@@ -3,3 +3,4 @@ export { default as Button } from './atoms/Button/Button';
 export { IconButton } from './atoms/IconButton';
 
 export { default as DurationPickerModal } from './molecules/DurationPickerModal/DurationPickerModal';
+export { default as NumberPickerModal } from './molecules/NumberPickerModal/NumberPickerModal';

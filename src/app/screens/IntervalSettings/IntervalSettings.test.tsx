@@ -5,9 +5,11 @@ import { readIntervalSettings, storeIntervalSettings } from '@/store';
 
 jest.mock('@/store', () => ({
   storeIntervalSettings: jest.fn(),
-  readIntervalSettings: jest
-    .fn()
-    .mockResolvedValue({ exerciseDuration: { minutes: 1, seconds: 0 }, restDuration: { minutes: 1, seconds: 0 } }),
+  readIntervalSettings: jest.fn().mockResolvedValue({
+    exerciseDuration: { minutes: 1, seconds: 0 },
+    restDuration: { minutes: 1, seconds: 0 },
+    repeat: 1,
+  }),
 }));
 
 describe('Interval Settings', () => {
@@ -102,12 +104,45 @@ describe('Interval Settings', () => {
       });
     });
 
-    it('displays repeat interval', async () => {
-      render(<IntervalSettings />);
+    describe('repeat', () => {
+      it('displays repeat setting', async () => {
+        render(<IntervalSettings />);
 
-      const repeat = await screen.findByTestId('repeat');
-      expect(within(repeat).getByText('Repeat')).toBeVisible();
-      expect(within(repeat).getByText('x2')).toBeVisible();
+        const repeat = await screen.findByTestId('repeat');
+        expect(within(repeat).getByText('Repeat')).toBeVisible();
+      });
+
+      it('stores repeat duration when apply button is pressed on number picker modal', async () => {
+        (readIntervalSettings as jest.Mock).mockResolvedValue({
+          exerciseDuration: { minutes: 2, seconds: 30 },
+          restDuration: { minutes: 1, seconds: 30 },
+          repeat: 2,
+        });
+        render(<IntervalSettings />);
+
+        const repeat = await screen.findByTestId('repeat');
+        await act(async () => {
+          fireEvent.press(within(repeat).getByText('x2'));
+        });
+
+        expect(screen.getByTestId('numberPickerModalTitle')).toHaveTextContent('Repeat');
+        fireEvent.press(screen.getByText('Apply'));
+
+        expect(storeIntervalSettings).toHaveBeenCalledWith(expect.objectContaining({ repeat: 2 }));
+      });
+
+      it('displays the repeat duration fetched from storage', async () => {
+        (readIntervalSettings as jest.Mock).mockResolvedValue({
+          exerciseDuration: { minutes: 2, seconds: 30 },
+          restDuration: { minutes: 1, seconds: 30 },
+          repeat: 3,
+        });
+
+        render(<IntervalSettings />);
+
+        const repeat = await screen.findByTestId('repeat');
+        expect(within(repeat).getByText('x3')).toBeVisible();
+      });
     });
   });
 
