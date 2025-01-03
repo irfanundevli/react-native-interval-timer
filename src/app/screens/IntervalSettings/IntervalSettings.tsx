@@ -12,12 +12,14 @@ interface IntervalDuration {
 }
 
 export default function IntervalSettings() {
-  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [exerciseDuration, setExerciseDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [restDuration, setRestDuration] = useState<IntervalDuration>({ minutes: 1, seconds: 0 });
-  const [repeat, setRepeat] = useState(1);
   const [showRestDurationPicker, setShowRestDurationPicker] = useState(false);
+  const [repeat, setRepeat] = useState(1);
   const [showRepeatPicker, setShowRepeatPicker] = useState(false);
+  const [rounds, setRounds] = useState(1);
+  const [showRoundsPicker, setShowRoundsPicker] = useState(false);
 
   const toggleDurationPickerModal = useCallback(() => {
     setShowDurationPicker(!showDurationPicker);
@@ -26,9 +28,9 @@ export default function IntervalSettings() {
   const handleIntervalDurationChange = useCallback(
     (duration: IntervalDuration) => {
       setExerciseDuration(duration);
-      storeIntervalSettings({ exerciseDuration: duration, restDuration, repeat });
+      storeIntervalSettings({ exerciseDuration: duration, restDuration, repeat, rounds });
     },
-    [restDuration, repeat],
+    [restDuration, repeat, rounds],
   );
 
   const toggleRestDurationPickerModal = useCallback(() => {
@@ -38,9 +40,9 @@ export default function IntervalSettings() {
   const handleRestDurationChange = useCallback(
     (duration: IntervalDuration) => {
       setRestDuration(duration);
-      storeIntervalSettings({ exerciseDuration, restDuration: duration, repeat });
+      storeIntervalSettings({ exerciseDuration, restDuration: duration, repeat, rounds });
     },
-    [exerciseDuration, repeat],
+    [exerciseDuration, repeat, rounds],
   );
 
   const toggleRepeatPickerModal = useCallback(() => {
@@ -50,17 +52,30 @@ export default function IntervalSettings() {
   const handleRepeatChange = useCallback(
     (value: number) => {
       setRepeat(value);
-      storeIntervalSettings({ exerciseDuration, restDuration, repeat: value });
+      storeIntervalSettings({ exerciseDuration, restDuration, repeat: value, rounds });
     },
-    [exerciseDuration, restDuration],
+    [exerciseDuration, restDuration, rounds],
+  );
+
+  const toggleRoundsPickerModal = useCallback(() => {
+    setShowRoundsPicker(!showRoundsPicker);
+  }, [showRoundsPicker]);
+
+  const handleRoundsChange = useCallback(
+    (value: number) => {
+      setRounds(value);
+      storeIntervalSettings({ exerciseDuration, restDuration, repeat, rounds: value });
+    },
+    [exerciseDuration, restDuration, repeat],
   );
 
   useEffect(() => {
     async function readIntervalSettingsFromStorage() {
-      const { exerciseDuration, restDuration, repeat } = await readIntervalSettings();
+      const { exerciseDuration, restDuration, repeat, rounds } = await readIntervalSettings();
       setExerciseDuration(exerciseDuration);
       setRestDuration(restDuration);
       setRepeat(repeat);
+      setRounds(rounds);
     }
 
     readIntervalSettingsFromStorage();
@@ -157,11 +172,21 @@ export default function IntervalSettings() {
             <View style={styles.interval}>
               <Text style={styles.intervalName}>Number of Rounds</Text>
 
-              <View style={styles.timeContainer}>
-                <Text style={styles.time}>x2</Text>
-              </View>
+              <TouchableHighlight onPress={toggleRoundsPickerModal}>
+                <View style={styles.timeContainer}>
+                  <Text style={styles.time}>x{rounds}</Text>
+                </View>
+              </TouchableHighlight>
             </View>
           </View>
+
+          <NumberPickerModal
+            initialValue={rounds}
+            onApply={handleRoundsChange}
+            title="Number of Rounds"
+            toggleVisibility={toggleRoundsPickerModal}
+            visible={showRoundsPicker}
+          />
         </View>
 
         <View style={styles.startButton}>

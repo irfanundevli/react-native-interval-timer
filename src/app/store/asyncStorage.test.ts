@@ -12,6 +12,7 @@ describe('asyncStorage', () => {
         exerciseDuration: { minutes: 5, seconds: 30 },
         restDuration: { minutes: 2, seconds: 0 },
         repeat: 1,
+        rounds: 1,
       };
 
       await storeIntervalSettings(settings);
@@ -24,6 +25,7 @@ describe('asyncStorage', () => {
         exerciseDuration: { minutes: 5, seconds: 30 },
         restDuration: { minutes: 2, seconds: 0 },
         repeat: 1,
+        rounds: 2,
       };
 
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
