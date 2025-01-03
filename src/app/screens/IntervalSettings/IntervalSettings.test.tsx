@@ -147,18 +147,51 @@ describe('Interval Settings', () => {
   });
 
   describe('Rounds', () => {
-    it('displays rounds section', async () => {
+    it('displays rounds title', async () => {
       render(<IntervalSettings />);
 
       await waitFor(() => expect(screen.getByText('ROUNDS')).toBeVisible());
     });
 
-    it('displays number of rounds', async () => {
+    it('displays number of rounds setting', async () => {
       render(<IntervalSettings />);
 
       const rounds = await screen.findByTestId('rounds');
       expect(within(rounds).getByText('Number of Rounds')).toBeVisible();
-      expect(within(rounds).getByText('x2')).toBeVisible();
+    });
+
+    it('stores number of rounds when apply button is pressed on number picker modal', async () => {
+      (readIntervalSettings as jest.Mock).mockResolvedValue({
+        exerciseDuration: { minutes: 2, seconds: 30 },
+        restDuration: { minutes: 1, seconds: 30 },
+        repeat: 3,
+        rounds: 4,
+      });
+      render(<IntervalSettings />);
+
+      const rounds = await screen.findByTestId('rounds');
+      await act(async () => {
+        fireEvent.press(within(rounds).getByText('x4'));
+      });
+
+      expect(screen.getByTestId('numberPickerModalTitle')).toHaveTextContent('Number of Rounds');
+      fireEvent.press(screen.getByText('Apply'));
+
+      expect(storeIntervalSettings).toHaveBeenCalledWith(expect.objectContaining({ rounds: 4 }));
+    });
+
+    it('displays the number of rounds fetched from storage', async () => {
+      (readIntervalSettings as jest.Mock).mockResolvedValue({
+        exerciseDuration: { minutes: 2, seconds: 30 },
+        restDuration: { minutes: 1, seconds: 30 },
+        repeat: 3,
+        rounds: 5,
+      });
+
+      render(<IntervalSettings />);
+
+      const rounds = await screen.findByTestId('rounds');
+      expect(within(rounds).getByText('x5')).toBeVisible();
     });
   });
 });
