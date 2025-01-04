@@ -20,10 +20,6 @@ export default function useCountdown(initialStartTimeInMillis: number): CountDow
   const [time, setTime] = useState(initialStartTimeInMillis);
   const [initialTime] = useState(initialStartTimeInMillis);
 
-  useEffect(() => {
-    return () => clearInterval(intervalId);
-  }, []);
-
   const reset = useCallback(() => {
     clearInterval(intervalId);
     setState('NOT-STARTED');
@@ -49,6 +45,16 @@ export default function useCountdown(initialStartTimeInMillis: number): CountDow
   const stop = useCallback(() => {
     clearInterval(intervalId);
     setState('STOPPED');
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      start();
+    }, 500);
+  }, [start]);
+
+  useEffect(() => {
+    return () => clearInterval(intervalId);
   }, []);
 
   return {
