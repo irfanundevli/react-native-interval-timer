@@ -58,7 +58,6 @@ describe('Interval Timer', () => {
     });
     render(<IntervalTimer workout={workout} />);
 
-    pressButton('play');
     advanceTimersByTime(2 * SECOND);
 
     expect(within(currentInterval()).getByText('Exercise')).toBeOnTheScreen();
@@ -102,7 +101,6 @@ describe('Interval Timer', () => {
       roundsPerCycle: 1,
     });
     render(<IntervalTimer workout={workout} />);
-    pressButton('play');
 
     advanceTimersByTime(5 * SECOND);
 
@@ -119,7 +117,6 @@ describe('Interval Timer', () => {
     });
     render(<IntervalTimer workout={workout} />);
 
-    pressButton('play');
     expect(within(rounds()).getByText('1/3')).toBeOnTheScreen();
     expect(within(rounds()).getByText('ROUNDS')).toBeOnTheScreen();
 
@@ -141,8 +138,6 @@ describe('Interval Timer', () => {
     });
     render(<IntervalTimer workout={workout} />);
 
-    pressButton('play');
-
     expect(within(cycles()).getByText('1/1')).toBeOnTheScreen();
     expect(within(cycles()).getByText('CYCLES')).toBeOnTheScreen();
   });
@@ -155,7 +150,6 @@ describe('Interval Timer', () => {
       roundsPerCycle: 1,
     });
     render(<IntervalTimer workout={workout} />);
-    pressButton('play');
     advanceTimersByTime(7 * SECOND);
 
     pressButton('stop');
@@ -172,7 +166,6 @@ describe('Interval Timer', () => {
       roundsPerCycle: 1,
     });
     render(<IntervalTimer workout={workout} />);
-    pressButton('play');
     advanceTimersByTime(7 * SECOND);
 
     pressButton('stop');
@@ -191,7 +184,6 @@ describe('Interval Timer', () => {
       roundsPerCycle: 3,
     });
     render(<IntervalTimer workout={workout} />);
-    pressButton('play');
     advanceTimersByTime(30 * SECOND);
 
     pressButton('reset');

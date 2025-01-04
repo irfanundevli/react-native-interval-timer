@@ -20,10 +20,6 @@ describe('useCountdown', () => {
   it('decreases time by 1 every second', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
 
-    act(() => {
-      result.current.start();
-    });
-
     advanceTimersByTime(1 * SECOND);
     expect(result.current.formattedTime).toEqual('00:59');
 
@@ -33,10 +29,6 @@ describe('useCountdown', () => {
 
   it('stops the countdown', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
-
-    act(() => {
-      result.current.start();
-    });
 
     advanceTimersByTime(1 * SECOND);
     act(() => {
@@ -49,9 +41,6 @@ describe('useCountdown', () => {
 
   it('resets the countdown', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
-    act(() => {
-      result.current.start();
-    });
     advanceTimersByTime(1 * SECOND);
     act(() => {
       result.current.stop();
@@ -67,9 +56,6 @@ describe('useCountdown', () => {
 
   it('restarts the countdown with a new time', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
-    act(() => {
-      result.current.start();
-    });
     advanceTimersByTime(1 * SECOND);
     expect(result.current.formattedTime).toEqual('00:59');
 
@@ -81,10 +67,11 @@ describe('useCountdown', () => {
     expect(result.current.formattedTime).toEqual('01:58');
   });
 
-  it('sets state as NOT-STARTED initially', () => {
+  it('sets state as RUNNING initially', () => {
     const { result } = renderHook(() => useCountdown(1 * MINUTE));
 
-    expect(result.current.state).toEqual('NOT-STARTED');
+    advanceTimersByTime(500);
+    expect(result.current.state).toEqual('RUNNING');
   });
 
   it('sets state as NOT-STARTED when reset function is called', () => {
