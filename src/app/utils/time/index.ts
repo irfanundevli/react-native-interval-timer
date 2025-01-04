@@ -1,1 +1,2 @@
-export { millisecondsToTime, timeToString } from './timeConverter';
+export { millisecondsToTime, timeToString, timeToMilliseconds } from './timeConverter';
+export { sumTotalTime } from './timeCalculator';

@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
-import { Divider, DurationPickerModal, NumberPickerModal } from '@/ui/components';
+import { Divider, DurationPickerModal, NumberPickerModal, Button } from '@/ui/components';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { timeToString } from '@/utils/time';
-import { readIntervalSettings, storeIntervalSettings } from '@/store';
+import { readIntervalSettings, storeIntervalSettings, Workout } from '@/store';
+import { useNavigation } from '@react-navigation/native';
+import { timeToMilliseconds, sumTotalTime } from '@/utils/time';
 
 interface IntervalDuration {
   minutes: number;
@@ -20,6 +22,7 @@ export default function IntervalSettings() {
   const [showRepeatPicker, setShowRepeatPicker] = useState(false);
   const [rounds, setRounds] = useState(1);
   const [showRoundsPicker, setShowRoundsPicker] = useState(false);
+  const navigation = useNavigation();
 
   const toggleDurationPickerModal = useCallback(() => {
     setShowDurationPicker(!showDurationPicker);
@@ -189,10 +192,23 @@ export default function IntervalSettings() {
           />
         </View>
 
-        <View style={styles.startButton}>
+        <Button
+          style={styles.startButton}
+          onPress={() =>
+            navigation.navigate('IntervalTimer', {
+              workout: new Workout({
+                cycles: rounds,
+                exercise: { name: 'exercise', type: 'exercise', duration: timeToMilliseconds(exerciseDuration) },
+                rest: { name: 'rest', type: 'rest', duration: timeToMilliseconds(restDuration) },
+                roundsPerCycle: repeat,
+              }),
+            })
+          }
+          testID="startButton"
+        >
           <Text style={styles.startButtonText}>Start routine</Text>
-          <Text style={styles.startButtonText}>2:20</Text>
-        </View>
+          <Text style={styles.startButtonText}>{sumTotalTime([exerciseDuration, restDuration], repeat * rounds)}</Text>
+        </Button>
       </View>
     </>
   );

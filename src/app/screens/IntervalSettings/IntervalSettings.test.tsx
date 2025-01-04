@@ -4,6 +4,7 @@ import IntervalSettings from './IntervalSettings';
 import { readIntervalSettings, storeIntervalSettings } from '@/store';
 
 jest.mock('@/store', () => ({
+  ...jest.requireActual('@/store'),
   storeIntervalSettings: jest.fn(),
   readIntervalSettings: jest.fn().mockResolvedValue({
     exerciseDuration: { minutes: 1, seconds: 0 },
@@ -11,6 +12,17 @@ jest.mock('@/store', () => ({
     repeat: 1,
   }),
 }));
+
+const mockedNavigate = jest.fn();
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedNavigate,
+    }),
+  };
+});
 
 describe('Interval Settings', () => {
   it('displays screen title', async () => {
@@ -192,6 +204,36 @@ describe('Interval Settings', () => {
 
       const rounds = await screen.findByTestId('rounds');
       expect(within(rounds).getByText('x5')).toBeVisible();
+    });
+  });
+
+  describe('Start', () => {
+    it('displays start button', async () => {
+      render(<IntervalSettings />);
+
+      const startButton = await screen.findByTestId('startButton');
+      expect(within(startButton).getByText('Start routine')).toBeVisible();
+    });
+
+    it('navigates to the timer screen when start button is pressed', async () => {
+      render(<IntervalSettings />);
+
+      fireEvent.press(await screen.findByTestId('startButton'));
+
+      expect(mockedNavigate).toHaveBeenNthCalledWith(1, 'IntervalTimer', expect.any(Object));
+    });
+
+    it('contains total interval duration', async () => {
+      (readIntervalSettings as jest.Mock).mockResolvedValue({
+        exerciseDuration: { minutes: 1, seconds: 10 },
+        restDuration: { minutes: 0, seconds: 20 },
+        repeat: 3,
+        rounds: 3,
+      });
+      render(<IntervalSettings />);
+
+      const startButton = await screen.findByTestId('startButton');
+      expect(within(startButton).getByText('13:30')).toBeVisible();
     });
   });
 });

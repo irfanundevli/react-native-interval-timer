@@ -1,4 +1,4 @@
-import { millisecondsToTime, timeToString, Options } from './timeConverter';
+import { millisecondsToTime, timeToString, timeToMilliseconds, Options } from './timeConverter';
 
 describe('Time Converter', () => {
   describe('millisecondsToTime', () => {
@@ -64,6 +64,34 @@ describe('Time Converter', () => {
 
       it('formats single digit time values with leading zeros', () => {
         expect(timeToString({ minutes: 1, seconds: 1 })).toEqual('01:01');
+      });
+    });
+
+    describe('timeToMilliseconds', () => {
+      it('converts time object to milliseconds', () => {
+        expect(timeToMilliseconds({ hours: 1, minutes: 0, seconds: 0 })).toEqual(3600000);
+        expect(timeToMilliseconds({ minutes: 1, seconds: 0 })).toEqual(60000);
+        expect(timeToMilliseconds({ seconds: 1 })).toEqual(1000);
+      });
+
+      it('returns 0 if no time is provided', () => {
+        expect(timeToMilliseconds({})).toEqual(0);
+      });
+
+      it('converts time object with only hours to milliseconds', () => {
+        expect(timeToMilliseconds({ hours: 1 })).toEqual(3600000);
+      });
+
+      it('converts time object with only minutes to milliseconds', () => {
+        expect(timeToMilliseconds({ minutes: 1 })).toEqual(60000);
+      });
+
+      it('converts time object with only seconds to milliseconds', () => {
+        expect(timeToMilliseconds({ seconds: 1 })).toEqual(1000);
+      });
+
+      it('converts time object with hours, minutes, and seconds to milliseconds', () => {
+        expect(timeToMilliseconds({ hours: 1, minutes: 1, seconds: 1 })).toEqual(3661000);
       });
     });
   });
