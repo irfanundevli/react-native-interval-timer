@@ -50,3 +50,17 @@ export const timeToString = (time: Time): string => {
 
   return [minutes, seconds].join(':');
 };
+
+/**
+ * Converts a Time object to milliseconds.
+ *
+ * @param {Time} time - The time object to convert. It may contain hours, minutes, and seconds.
+ * @returns {number} The time in milliseconds.
+ */
+export const timeToMilliseconds = (time: Time): number => {
+  const hoursInMillis = (time.hours ?? 0) * ONE_HOUR_IN_MILLIS;
+  const minutesInMillis = (time.minutes ?? 0) * ONE_MINUTE_MILLIS;
+  const secondsInMillis = (time.seconds ?? 0) * ONE_SECOND_IN_MILLIS;
+
+  return hoursInMillis + minutesInMillis + secondsInMillis;
+};

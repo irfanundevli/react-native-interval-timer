@@ -2,16 +2,23 @@ import React from 'react';
 import { Pressable, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 interface Props {
+  children?: React.ReactNode;
   onPress: () => void;
   style?: ViewStyle;
+  testID?: string;
   textStyle?: TextStyle;
-  title: string;
+  title?: string;
 }
 
-export default function Button({ title, onPress, style, textStyle }: Props) {
+export default function Button({ children, title, onPress, style, testID, textStyle }: Props) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.button, style, pressed && styles.pressed]}>
-      <Text style={[styles.text, textStyle]}>{title}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.button, style, pressed && styles.pressed]}
+      testID={testID}
+    >
+      {title && <Text style={[styles.text, textStyle]}>{title}</Text>}
+      {children}
     </Pressable>
   );
 }

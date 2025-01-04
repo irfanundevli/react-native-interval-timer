@@ -1,4 +1,4 @@
-import { Workout } from '@/store';
+import { type Workout } from '@/store';
 
 export type RootStackParamList = {
   IntervalTimer: { workout: Workout };
