@@ -3,22 +3,19 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import { IntervalTimer } from '@/screens/IntervalTimer';
 import { IntervalSettings } from '@/screens/IntervalSettings';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { getWorkout } from '@/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const workout = getWorkout();
-
   return (
     <NavigationContainer>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
-          <Stack.Navigator initialRouteName="IntervalTimer" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName="IntervalSettings" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="IntervalSettings" component={IntervalSettings} />
-            <Stack.Screen name="IntervalTimer">{() => <IntervalTimer workout={workout} />}</Stack.Screen>
+            <Stack.Screen name="IntervalTimer" component={IntervalTimer}></Stack.Screen>
           </Stack.Navigator>
           <StatusBar style="auto" />
         </SafeAreaView>

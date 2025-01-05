@@ -1,4 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Workout } from './Workout';
+import { timeToMilliseconds } from '@/utils/time';
 
 interface Duration {
   minutes: number;
@@ -21,6 +23,17 @@ export const DEFAULT_INTERVAL_SETTINGS: IntervalSettings = {
   rounds: 1,
 };
 
+export const DEFAULT_WORKOUT = new Workout({
+  cycles: DEFAULT_INTERVAL_SETTINGS.rounds,
+  exercise: {
+    name: 'exercise',
+    type: 'exercise',
+    duration: timeToMilliseconds(DEFAULT_INTERVAL_SETTINGS.exerciseDuration),
+  },
+  rest: { name: 'rest', type: 'rest', duration: timeToMilliseconds(DEFAULT_INTERVAL_SETTINGS.restDuration) },
+  roundsPerCycle: DEFAULT_INTERVAL_SETTINGS.repeat,
+});
+
 export const storeIntervalSettings = async (settings: IntervalSettings): Promise<void> => {
   try {
     const jsonValue = JSON.stringify(settings);
@@ -39,3 +52,18 @@ export const readIntervalSettings = async (): Promise<IntervalSettings> => {
     return DEFAULT_INTERVAL_SETTINGS;
   }
 };
+
+export async function getWorkout(): Promise<Workout> {
+  const settings = await readIntervalSettings();
+
+  return new Workout({
+    cycles: settings.rounds,
+    exercise: {
+      name: 'exercise',
+      type: 'exercise',
+      duration: timeToMilliseconds(settings.exerciseDuration),
+    },
+    rest: { name: 'rest', type: 'rest', duration: timeToMilliseconds(settings.restDuration) },
+    roundsPerCycle: settings.repeat,
+  });
+}
