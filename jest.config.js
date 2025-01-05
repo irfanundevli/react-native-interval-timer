@@ -9,7 +9,6 @@ module.exports = {
     '!**/.expo/**',
   ],
   moduleNameMapper: {
-    '@/hooks/(.*)': '<rootDir>/src/app/hooks/$1',
     '@/store': '<rootDir>/src/app/store/',
     '@/ui/(.*)': '<rootDir>/src/app/ui-library/$1',
     '@/utils/(.*)': '<rootDir>/src/app/utils/$1',

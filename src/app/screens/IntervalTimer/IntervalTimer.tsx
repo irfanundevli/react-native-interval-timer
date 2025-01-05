@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Interval from './interval';
-import { useCountdown } from '@/hooks/countdown';
+import { useCountdown } from './useCountdown';
 import { millisecondsToTime } from '@/utils/time';
 import Status from './status';
 import { IconButton } from '@/ui/components';

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
-import useCountdown from './useCountdown';
+import { useCountdown } from './useCountdown';
 
 jest.useFakeTimers();
 
