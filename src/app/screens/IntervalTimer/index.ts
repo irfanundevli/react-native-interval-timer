@@ -1,1 +1,1 @@
-export { default as IntervalTimer } from "./IntervalTimer";
+export { default as IntervalTimer } from './IntervalTimerContainer';

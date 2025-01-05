@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Workout, DEFAULT_WORKOUT, getWorkout } from '@/store';
+import { Workout, getWorkout } from '@/store';
 
-export function useWorkout(): Workout {
-  const [workout, setWorkout] = useState(DEFAULT_WORKOUT);
+export function useWorkout(): Workout | undefined {
+  const [workout, setWorkout] = useState<Workout | undefined>();
 
   useEffect(() => {
     async function loadWorkout() {

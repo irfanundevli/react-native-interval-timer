@@ -5,16 +5,18 @@ import { useCountdown } from '@/hooks/countdown';
 import { millisecondsToTime } from '@/utils/time';
 import Status from './status';
 import { IconButton } from '@/ui/components';
-import { useNavigation } from '@react-navigation/native';
-import { useWorkout } from './useWorkout';
+import { Workout } from '@/store';
 
-export default function IntervalTimer() {
-  const navigation = useNavigation();
-  const workout = useWorkout();
+interface Props {
+  workout: Workout;
+  onTimerConfigPress: () => void;
+}
 
+export default function IntervalTimer({ onTimerConfigPress, workout }: Props) {
   const currentInterval = workout.currentInterval;
   const nextInterval = workout.nextInterval;
   const countdown = useCountdown(currentInterval.duration);
+
   const resetInterval = () => {
     workout.reset();
     countdown.reset();
@@ -34,12 +36,7 @@ export default function IntervalTimer() {
   return (
     <View style={styles.container}>
       <View style={styles.reset}>
-        <IconButton
-          icon="timer-cog-outline"
-          onPress={() => navigation.navigate('IntervalSettings')}
-          testID="timer-config"
-          type="clean"
-        />
+        <IconButton icon="timer-cog-outline" onPress={onTimerConfigPress} testID="timer-config" type="clean" />
         <IconButton icon="refresh" onPress={resetInterval} testID="reset" type="clean" />
       </View>
       <View style={styles.intervals}>
