@@ -1,4 +1,3 @@
-``;
 export type RootStackParamList = {
   IntervalTimer: undefined;
   IntervalSettings: undefined;

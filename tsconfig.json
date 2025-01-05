@@ -5,7 +5,6 @@
       "@/*": [
         "./*",
       ],
-      "@/hooks/*": ["./src/app/hooks/*"],
       "@/screens/*": ["./src/app/screens/*"],
       "@/store": ["./src/app/store"],
       "@/ui/*": ["./src/app/ui-library/*"],

@@ -15,7 +15,7 @@ interface CountDown {
 
 let intervalId: any;
 
-export default function useCountdown(initialStartTimeInMillis: number): CountDown {
+export function useCountdown(initialStartTimeInMillis: number): CountDown {
   const [state, setState] = useState<State>('NOT-STARTED');
   const [time, setTime] = useState(initialStartTimeInMillis);
   const [initialTime] = useState(initialStartTimeInMillis);
