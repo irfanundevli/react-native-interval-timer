@@ -192,20 +192,7 @@ export default function IntervalSettings() {
           />
         </View>
 
-        <Button
-          style={styles.startButton}
-          onPress={() =>
-            navigation.navigate('IntervalTimer', {
-              workout: new Workout({
-                cycles: rounds,
-                exercise: { name: 'exercise', type: 'exercise', duration: timeToMilliseconds(exerciseDuration) },
-                rest: { name: 'rest', type: 'rest', duration: timeToMilliseconds(restDuration) },
-                roundsPerCycle: repeat,
-              }),
-            })
-          }
-          testID="startButton"
-        >
+        <Button style={styles.startButton} onPress={() => navigation.navigate('IntervalTimer')} testID="startButton">
           <Text style={styles.startButtonText}>Start routine</Text>
           <Text style={styles.startButtonText}>{sumTotalTime([exerciseDuration, restDuration], repeat * rounds)}</Text>
         </Button>

@@ -220,7 +220,7 @@ describe('Interval Settings', () => {
 
       fireEvent.press(await screen.findByTestId('startButton'));
 
-      expect(mockedNavigate).toHaveBeenNthCalledWith(1, 'IntervalTimer', expect.any(Object));
+      expect(mockedNavigate).toHaveBeenNthCalledWith(1, 'IntervalTimer');
     });
 
     it('contains total interval duration', async () => {

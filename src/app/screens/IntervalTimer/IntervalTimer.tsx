@@ -2,18 +2,15 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Interval from './interval';
 import { useCountdown } from '@/hooks/countdown';
-import { Workout } from '@/store';
 import { millisecondsToTime } from '@/utils/time';
 import Status from './status';
 import { IconButton } from '@/ui/components';
 import { useNavigation } from '@react-navigation/native';
+import { useWorkout } from './useWorkout';
 
-interface Props {
-  workout: Workout;
-}
-
-export default function IntervalTimer({ workout }: Props) {
+export default function IntervalTimer() {
   const navigation = useNavigation();
+  const workout = useWorkout();
 
   const currentInterval = workout.currentInterval;
   const nextInterval = workout.nextInterval;

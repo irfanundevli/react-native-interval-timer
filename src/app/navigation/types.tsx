@@ -1,7 +1,6 @@
-import { type Workout } from '@/store';
-
+``;
 export type RootStackParamList = {
-  IntervalTimer: { workout: Workout };
+  IntervalTimer: undefined;
   IntervalSettings: undefined;
 };
 
