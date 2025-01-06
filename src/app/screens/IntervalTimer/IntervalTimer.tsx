@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Interval from './interval';
 import { useCountdown } from './useCountdown';
 import { millisecondsToTime } from '@/utils/time';
-import Status from './status';
-import { IconButton } from '@/ui/components';
+import { Divider, IconButton } from '@/ui/components';
 import { Workout } from '@/store';
+import { Colors } from '@/ui/styles';
 
 interface Props {
   workout: Workout;
@@ -35,33 +35,71 @@ export default function IntervalTimer({ onTimerConfigPress, workout }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.reset}>
-        <IconButton icon="timer-cog-outline" onPress={onTimerConfigPress} testID="timer-config" type="clean" />
-        <IconButton icon="refresh" onPress={resetInterval} testID="reset" type="clean" />
-      </View>
-      <View style={styles.intervals}>
-        <Interval
-          name={currentInterval.name}
-          size="2xl"
-          testID="current-interval"
-          time={millisecondsToTime(countdown.time)}
-          type={currentInterval.type}
-        />
-        {nextInterval && (
+      <View style={{ rowGap: 30 }}>
+        <View style={styles.reset}>
+          <IconButton icon="timer-cog-outline" onPress={onTimerConfigPress} testID="timer-config" type="clean" />
+          <IconButton icon="refresh" onPress={resetInterval} testID="reset" type="clean" />
+        </View>
+        <View style={styles.intervals}>
           <Interval
-            name={nextInterval.name}
-            size="md"
-            testID="next-interval"
-            time={millisecondsToTime(nextInterval.duration)}
-            type={nextInterval.type}
+            name={currentInterval.name}
+            size="2xl"
+            testID="current-interval"
+            time={millisecondsToTime(countdown.time)}
+            type={currentInterval.type}
           />
-        )}
+          {nextInterval && (
+            <>
+              <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+                <Divider />
+                <View style={{ borderWidth: 1, borderColor: Colors.WHITE, borderRadius: 6, padding: 4 }}>
+                  <Text style={{ color: 'white' }}>NEXT</Text>
+                </View>
+                <Divider />
+              </View>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }}
+                testID="next-interval"
+              >
+                <Text style={{ color: Colors.WHITE, fontWeight: '500', fontSize: 24 }}>{nextInterval.name}</Text>
+                <Text style={{ color: Colors.WHITE, fontWeight: '500', fontSize: 24 }}>
+                  {millisecondsToTime(nextInterval.duration)}
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
+
+        <View style={[styles.status]}>
+          <View testID="rounds" style={{ alignItems: 'flex-start', rowGap: 40, justifyContent: 'space-between' }}>
+            <Text style={{ color: Colors.WHITE, fontWeight: '300', fontSize: 16 }}>sets</Text>
+            <Text style={{ color: Colors.WHITE, fontWeight: '600', fontSize: 40, marginBottom: 10 }}>
+              {workout.roundStatus}
+            </Text>
+          </View>
+
+          <View testID="cycles" style={{ alignItems: 'center', rowGap: 40, justifyContent: 'space-between' }}>
+            <Text style={{ color: Colors.WHITE, fontWeight: '300', fontSize: 16 }}>cycles</Text>
+            <Text style={{ color: Colors.WHITE, fontWeight: '600', fontSize: 40, marginBottom: 10 }}>
+              {workout.cycleStatus}
+            </Text>
+          </View>
+
+          <View testID="remaining" style={{ alignItems: 'flex-end', rowGap: 40, alignContent: 'space-between' }}>
+            <Text style={{ color: Colors.WHITE, fontWeight: '300', fontSize: 16 }}>remaining</Text>
+            <Text
+              style={{
+                color: Colors.WHITE,
+                fontWeight: '600',
+                fontSize: 64,
+              }}
+            >
+              {millisecondsToTime(totalRemainingTime)}
+            </Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.status}>
-        <Status name="ROUNDS" testID="rounds" value={workout.roundStatus} />
-        <Status name="REMAINING" testID="remaining" value={millisecondsToTime(totalRemainingTime)} />
-        <Status name="CYCLES" testID="cycles" value={workout.cycleStatus} />
-      </View>
+
       <View style={styles.footer}>
         {countdown.state === 'RUNNING' ? (
           <IconButton icon="stop" onPress={() => countdown.stop()} testID="stop" />
@@ -84,23 +122,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 6,
     width: '100%',
+    height: '100%',
   },
   intervals: {
-    width: '100%',
+    borderColor: Colors.WHITE,
+    borderWidth: 0.2,
+    borderRadius: 16,
+    padding: 20,
+    rowGap: 16,
   },
   footer: {
     alignItems: 'center',
+    marginBottom: 40,
   },
   reset: {
     alignSelf: 'flex-end',
     flexDirection: 'row',
+    marginBottom: 40,
   },
   status: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-    paddingHorizontal: 40,
     width: '100%',
+    padding: 16,
   },
   white: {
     color: 'white',

@@ -13,15 +13,14 @@ interface Props {
 }
 
 export default function IntervalCard({ name, size, testID, time, type }: Props) {
-  const color = getColor(type);
   const nameSize = getNameSizeStyle(size);
   const timeSize = getTimeSizeStyle(size);
 
   return (
     <View style={styles.container} testID={testID}>
       <View style={styles.content}>
-        <Text style={[{ color }, nameSize]}>{name}</Text>
-        <Text style={[{ color }, styles.time, timeSize]}>{time}</Text>
+        <Text style={[{ color: Colors.WHITE }, nameSize]}>{name}</Text>
+        <Text style={[{ color: Colors.WHITE }, styles.time, timeSize]}>{time}</Text>
       </View>
     </View>
   );
@@ -41,17 +40,6 @@ const styles = StyleSheet.create({
   },
 });
 
-function getColor(intervalType: IntervalType): string {
-  switch (intervalType) {
-    case 'exercise':
-      return Colors.RED;
-    case 'rest':
-      return Colors.BLUE;
-    default:
-      return Colors.WHITE;
-  }
-}
-
 function getNameSizeStyle(size: Size): Partial<TextStyle> {
   switch (size) {
     case '2xl':
@@ -70,7 +58,7 @@ function getNameSizeStyle(size: Size): Partial<TextStyle> {
 function getTimeSizeStyle(size: Size): Partial<TextStyle> {
   switch (size) {
     case '2xl':
-      return { fontWeight: '700', fontSize: 132 };
+      return { fontWeight: '700', fontSize: 112 };
     default:
       return {
         fontSize: 64,

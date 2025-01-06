@@ -111,7 +111,7 @@ describe('Interval Timer', () => {
     );
     advanceTimersByTime(5 * SECOND);
 
-    expect(await within(remaining()).findByText('REMAINING')).toBeOnTheScreen();
+    expect(await within(remaining()).findByText('remaining')).toBeOnTheScreen();
     expect(await within(remaining()).findByText('01:05')).toBeOnTheScreen();
   });
 
@@ -131,15 +131,13 @@ describe('Interval Timer', () => {
     );
 
     expect(await within(rounds()).findByText('1/3')).toBeOnTheScreen();
-    expect(await within(rounds()).findByText('ROUNDS')).toBeOnTheScreen();
+    expect(await within(rounds()).findByText('sets')).toBeOnTheScreen();
 
     advanceTimersByTime(64 * SECOND);
     expect(await within(rounds()).findByText('1/3')).toBeOnTheScreen();
-    expect(await within(rounds()).findByText('ROUNDS')).toBeOnTheScreen();
 
     advanceTimersByTime(65 * SECOND);
     expect(await within(rounds()).findByText('2/3')).toBeOnTheScreen();
-    expect(await within(rounds()).findByText('ROUNDS')).toBeOnTheScreen();
   });
 
   it('displays cycles ', async () => {
@@ -158,7 +156,7 @@ describe('Interval Timer', () => {
     );
 
     expect(await within(cycles()).findByText('1/1')).toBeOnTheScreen();
-    expect(await within(cycles()).findByText('CYCLES')).toBeOnTheScreen();
+    expect(await within(cycles()).findByText('cycles')).toBeOnTheScreen();
   });
 
   it('is paused when the stop button is pressed', async () => {
