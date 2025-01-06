@@ -57,7 +57,10 @@ export default function IntervalTimer({ onTimerConfigPress, workout }: Props) {
                 </View>
                 <Divider />
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }}>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }}
+                testID="next-interval"
+              >
                 <Text style={{ color: Colors.WHITE, fontWeight: '500', fontSize: 24 }}>{nextInterval.name}</Text>
                 <Text style={{ color: Colors.WHITE, fontWeight: '500', fontSize: 24 }}>
                   {millisecondsToTime(nextInterval.duration)}
